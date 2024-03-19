@@ -5,10 +5,10 @@ El objetivo de este proyecto consiste en determinar si los niveles de desigualda
 ## Procedimiento
 En términos generales, para poder correr el modelo debemos seguir los siguientes pasos:
 
-*1. Definir la región de interés (ROI)
-*2. Correr el modelo de regresión sobre la región de interés
-*3. Determinar la tasa FDS del nivel de significacia de nuestras variables explicativas
-*4. En caso de que la variable sea significativa, mapear las zonas del cerebro afectadas
+* Definir la región de interés (ROI)
+* Correr el modelo de regresión sobre la región de interés
+* Determinar la tasa FDS del nivel de significacia de nuestras variables explicativas
+* En caso de que la variable sea significativa, mapear las zonas del cerebro afectadas
 
 El primer paso para obtener la región de interés será definir la estructura promedio del cerebro de nuestros pacientes para utilizarla como base para mostrar los resultados que se obtengan y para que a tevés de ella podamos definir la ROI. Para ello, desde la terminal de la VM escribiremos el siguiente código:
 
