@@ -95,10 +95,22 @@ Hemisferio derecho
 
 Considerando una tasa de falsos positivos del 15% en ambos casos, la variable IDG se vuelve relevante para aquellos valores T mayores en valor absoluto a 2.153413 en el caso del hemisferio izquierdo y de 1.976896 en el caso del hemisferio derecho. Las siguientes imagenes muestran las zonas del cerebro donde el IDG se torna relevante. 
 
+Hemisferio izquierdo vista lateral interna
 
-![modelo_IDG_left_lateral_view](https://github.com/cheque/neuro-data/assets/48302106/07924a35-9912-4ab1-ae48-e031431092c0)
+<img width="500" alt="Hemisferio Izquierdo" src="https://github.com/cheque/neuro-data/assets/48302106/bd970989-9b9c-4fb2-bb99-8e8925c1f548">
 
 
+Vista lateral externa
+
+<img width="500" alt="Hemisferio Izquierdo" src="https://github.com/cheque/neuro-data/assets/48302106/b3958188-097c-4bbd-9fee-54b065d5d2a0">
+
+Hemisferio derecho vista lateral interna
+
+<img width="500" alt="Hemisferio Izquierdo" src="https://github.com/cheque/neuro-data/assets/48302106/ce0869b3-a506-49f4-aad9-7d25a9394bae">
+
+Vista lateral externa
+
+<img width="500" alt="Hemisferio Izquierdo" src="https://github.com/cheque/neuro-data/assets/48302106/a3bfb8d5-9f74-4c0e-bf7d-7248228e667e">
 
 
 
