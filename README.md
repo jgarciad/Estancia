@@ -56,3 +56,51 @@ El resultado de lo anterior será la estructura del cerebro sin incluir la zona 
 
 La zona en azul represtna el área subcortical y que hemos descartado para nuestro análisis. 
 
+
+## Modelo
+
+Para cada individuo tenemos asociadas 4 variables que son: edad, genero (sólo hombre y mujer), DX_bl que hace referencia a si el individuo corresponde al grupo control o es paciente y el índice de desigualdad de género o IDG. En cualquier caso, hemos probado una regresión líneal multiple considrando las siguientes combinaciones:
+
+1) $cortical_thickness = IDG$
+2) $cortical_thickness = IDG + Age$
+3) $cortical_thickness = IDG + Sex$
+4) $cortical_thickness = IDG + Dx_bl$
+5) $cortical_thickness = IDG + Age + Sex$
+6) $cortical_thickness = IDG + Age + Dx_bl$
+7) $cortical_thickness = IDG + Sex + Dx_bl$
+8) $cortical_thickness = IDG + Age + Sex + Dx_bl$
+
+Dada la naturaleza del problema, utilizaremos pruebas FDR (False Discovery Rate) para determinar si una variable es significativa o no. Con las condiciones planteadas en la sescción anteriror, la variable IDG únicamente resulta ser relevante en el modelo 1, los resultados de las pruebas FDR se muestran a continuación:
+
+Hemisferio izquierdo
+
+| Treshold              | F-statistic | tvalue-(Intercept) | tvalue-IDG |
+| :---------------- | :------: | ----: | ----: |
+| 1%       |   NA  | 8.807274 | NA |
+| 5%       |   NA   | 8.807274 | NA |
+| 10%    |  NA   | 8.807274 | NA |
+| 15% |  4.637186   | 8.807274 | 2.153413 |
+| 20% |  3.356472   | 8.807274 | 1.832068 |
+
+Hemisferio derecho
+
+| Treshold              | F-statistic | tvalue-(Intercept) | tvalue-IDG |
+| :---------------- | :------: | ----: | ----: |
+| 1%       |   NA  | 9.355915 | NA |
+| 5%       |   NA   | 9.355915 | NA |
+| 10%    |  NA   | 9.355915 | NA |
+| 15% |  3.908117   | 9.355915 | 1.976896 |
+| 20% |  2.827187   | 9.355915 | 1.681424 |
+
+
+Considerando una tasa de falsos positivos del 15% en ambos casos, la variable IDG se vuelve relevante para aquellos valores T mayores en valor absoluto a 2.153413 en el caso del hemisferio izquierdo y de 1.976896 en el caso del hemisferio derecho. Las siguientes imagenes muestran las zonas del cerebro donde el IDG se torna relevante. 
+
+
+![modelo_IDG_left_lateral_view](https://github.com/cheque/neuro-data/assets/48302106/07924a35-9912-4ab1-ae48-e031431092c0)
+
+
+
+
+
+
+
