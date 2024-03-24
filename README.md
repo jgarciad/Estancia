@@ -113,6 +113,56 @@ Vista lateral externa
 <img width="500" alt="Hemisferio Izquierdo" src="https://github.com/cheque/neuro-data/assets/48302106/a3bfb8d5-9f74-4c0e-bf7d-7248228e667e">
 
 
+## Modelo. Propuesta 2. 
 
+Siguiendo pasos muy similares a lo que se plantea en la sección de procedimiento, esta vez vamos a seleccionar la ROI considerando la mascara de cada paciente en particular y no la mascara primedo como lo hemos hecho en un inicio. Para hacer eso, dentro de la terminal de la VM escribimos lo siguiente:
+
+```
+Hemosferio izquierdo:
+for file in neuro_data/output/*/temp/*_subcortical_mask.mnc; do volume_object_evaluate $file neuro_data/output/$(basename -s _subcortical_mask.mnc $file)/surfaces/$(basename -s _subcortical_mask.mnc $file)_mid_surface_left_81920.obj ROI2/ROI/$(basename -s .mnc $file)_left.txt; done
+
+Hemisferio derecho:
+for file in neuro_data/output/*/temp/*_subcortical_mask.mnc; do volume_object_evaluate $file neuro_data/output/$(basename -s _subcortical_mask.mnc $file)/surfaces/$(basename -s _subcortical_mask.mnc $file)_mid_surface_right_81920.obj ROI2/ROI/$(basename -s .mnc $file)_right.txt; done
+
+```
+
+La siguiente imagen, muestra el ejemplo de cómo se aprecia la región subcortical de un paciente tomando su propia mascar. 
+
+<img width="500" alt="Hemisferio Izquierdo" src="https://github.com/cheque/neuro-data/assets/48302106/e4949009-d1d3-48c8-be7c-81b59aee8026">
+
+Cada uno de esos achivos .txt contiene 0 y valores positivos, esos últimos hacen referencia a la zona subcortical del cerebro. Lo siguiente es procesar estos archivos, convertiremos los 0's en 1's y los valores positivos en 0's, con ello lo que tendremos es una mascara de lo que NO es la zona subcortical. Para ello hay que pocesar cada archivo, esto lo haremos en R.
+
+```
+#Hemisferio izquierdo
+for( i in 1:length(id)){
+  filepath <- paste0("ROI2/ROI/Left/",id[i],"_subcortical_mask_left.txt")
+  assign(paste0("aux"), read.table(filepath, sep = ",", header=FALSE))
+  aux <- aux %>% mutate(V2 = if_else(V1>0,0,1))
+  aux <- aux %>% select(V2)
+  write.table(aux, paste0("ROI2/ROI/Left/",id[i],"_mask_left.txt"), row.names = FALSE, col.names = FALSE)
+}
+
+
+#Hemisferio derecho
+for( i in 1:length(id)){
+  filepath <- paste0("ROI2/ROI/right/",id[i],"_subcortical_mask_right.txt")
+  assign(paste0("aux"), read.table(filepath, sep = ",", header=FALSE))
+  aux <- aux %>% mutate(V2 = if_else(V1>0,0,1))
+  aux <- aux %>% select(V2)
+  write.table(aux, paste0("ROI2/ROI/right/",id[i],"_mask_right.txt"), row.names = FALSE, col.names = FALSE)
+}
+
+```
+
+Una vez hecho esto, es momento de proyectar la ROI en cada paciente, para obtener el área de interes en cada uno de ellos y poder hacer la prueba estadística.
+
+```
+#Hemosferio izquierdo
+for file in neuro_data/output/*/thickness/*_native_rms_rsl_tlaplace_30mm_left.txt; do vertstats_math -mult ROI2/ROI/Subcortical_left.txt $file -old_style_file ROIFinal/thickness/$(basename -s .txt $file).txt; done
+
+#Hemisferio derecho
+for file in neuro_data/output/*/thickness/*_native_rms_rsl_tlaplace_30mm_right.txt; do vertstats_math -mult ROIFinal/Subcortical_right.txt $file -old_style_file ROIFinal/thickness/$(basename -s .txt $file).txt; done
+
+```
 
 
