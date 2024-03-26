@@ -165,4 +165,56 @@ for file in neuro_data/output/*/thickness/*_native_rms_rsl_tlaplace_30mm_right.t
 
 ```
 
+Para nuestro nuevo modelos hemos incluido una nueva variante que es considerar el Indice de Marginación, de tal manera que planteamos dos propuestas:
+
+1) $cortical_thickness = IDG + IM$
+2) $cortical_thickness = IM$
+
+El resultado del primer modelo basado en la pruena FDR es el siguiente:
+
+Hemisferio izquierdo
+
+| Treshold              | F-statistic | tvalue-(Intercept) | tvalue-IDG | tvalue-IM |
+| :---------------- | :------: | ----: | ----: | ----: |
+| 1%       |   18.371772  | 2.675596 | NA | 5.646297 |
+| 5%       |   18.371772   | 2.019872 | NA | 4.957493 |
+| 10%    |  4.252772   | 1.686800 | 2.387421 | 4.583074 |
+| 15% |  2.938386   | 1.472713 | 1.962351 | 4.583074 |
+| 20% |  2.368125   | 1.310805 | 1.684022 | 2.343637 |
+
+
+Hemisferio derecho
+
+| Treshold              | F-statistic | tvalue-(Intercept) | tvalue-IDG | tvalue-IM |
+| :---------------- | :------: | ----: | ----: | ----: |
+| 1%       |   11.363943  | 2.684823 | NA | 4.428994 |
+| 5%       |   8.553654   | 2.020289 | NA | 3.759492 |
+| 10%    |  3.821878   | 1.688829 | 2.271406 | 3.326305 |
+| 15% |  2.896442   | 1.475385 | 1.849553 | 2.929601 |
+| 20% |  2.314915   | 1.313015 | 1.617411 | 2.552914 |
+
+
+Como se puede obsrvar, el modelo muestra mejores resultados cuando se combina con el IM mejorando inculso el treshold de falsos positivos, considerando únciamente hata 10%. La siguientes imagenes muestran las zonas del cerebro en donde el IDG se vuelve significativo. 
+
+Hemisferio izquierdo vista lateral interna
+
+<img width="500" alt="Hemisferio Izquierdo" src="https://github.com/cheque/neuro-data/assets/48302106/d49a14e7-7ba8-4660-bf58-613331bb7bb7">
+
+Hemisferio izquierdo vista lateral externa
+
+<img width="500" alt="Hemisferio Izquierdo" src="https://github.com/cheque/neuro-data/assets/48302106/730f481d-cc85-48bb-9e8d-2668b35c0e01">
+
+Hemisferio derecho vista lateral interna
+
+<img width="500" alt="Hemisferio Izquierdo" src="https://github.com/cheque/neuro-data/assets/48302106/410a1b51-68ee-4c74-9433-896d1fd13b1b">
+
+Hemisferio derecho vista lateral externa
+
+<img width="500" alt="Hemisferio Izquierdo" src="https://github.com/cheque/neuro-data/assets/48302106/84d6c888-72a6-44c4-847a-42dd1e7764f3">
+
+
+
+
+
+
 
