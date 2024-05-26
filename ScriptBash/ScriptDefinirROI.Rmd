@@ -1,0 +1,83 @@
+---
+title: "Script Bash CIVET"
+output:
+  html_document:
+    df_print: paged
+---
+
+El objetivo de este proyecto consiste en determinar si los niveles de desigualdad de género e índices de marginalidad por municipio en México son reelevantes para la estructura cerebral dentro de un grupo de individuos de estuido.
+
+
+### Procedimiento
+
+En términos generales, para poder correr el modelo debemos seguir los siguientes pasos:
+
+* Definir la región de interés (ROI)
+* Correr el modelo de regresión sobre la región de interés
+* Determinar la tasa FDS del nivel de significancia de nuestras variables explicativas
+* En caso de que la variable sea significativa, mapear las zonas del cerebro afectadas
+
+Este documento se centra en el primer paso en donde se podrá ver en código bash utilizado para obtener la ROI de interés. El primer paso para realizar es descargar la máquina virtual (VM) que se encuentra en la siguiente ruta: <https://github.com/CobraLab/MINC-VM>. Para poder ejecutar la VM se pude hacer de varias formas, en nuestro caso usaremos VirtualBox el cual es de uso gratuito y se puede descargar desde la siguiente página: <https://www.virtualbox.org/wiki/Downloads>. Bata con buscar la versión según el sistema operativo que se esté utilizando.
+
+Dentro de la página donde se descarga la máquina virtual se pueden seguir las instrucciones de cómo ejecutarla utilizando VirtualBox. La VM ya viene preconfigurada con las siguientes aplicaciones:
+
+* minc-toolkit-v1
+* minc-toolkit-v2
+* pyminc
+* minc-stuffs
+* R
+* RStudio
+* RMINC
+* brain-view2
+* pyezminc
+* itksnap 3.4.0 with MINC support -- Currently broken
+* mni.cortical.statistics
+* generate_deformation_fields
+* mni-Display
+* nipype with MINC support
+* pydpiper
+* bpipe
+
+De modo que vamos a poder ejecutar código MINC desde consola, además de que podremos ejecutar modelos estadísticos desde RStudio puesto que ya tiene la librería RMINC instalada. 
+
+Para generar la ROI lo primero que haremos será configurar la carpeta en donde se encuentra nuestro proyecto como un disco dentro de la VM. Para hacer eso podemos seguir los pasos que se describen en la siguiente página <https://www.smarthomebeginner.com/setup-virtualbox-shared-folders-linux-windows/>. Lo ideal es que la carpeta que se configure contenga los archivos CIVET con los que se quiere trabajar. El siguiente paso es trabajar desde consola dentro de la VM en donde, utilizando bash y con funciones MINC podremos procesar los archivos que nos permitan generar la ROI, para ello buscamos dentro del menú de inicio, elegimos la opción "System Tools" y después "LXTerminal".
+
+Una vez dentro de la terminal, lo siguiente es buscar el directorio que anteriormente configuramos, para ello tecleamos el siguiente comando:
+
+```{bash, eval = FALSE}
+cd /media/sf_Estancia/
+```
+
+Note, que en nuestro caso la ruta de interés es _/media/sf_Estancia_. Podemos explorar los archivos que hay ahí desde la terminal tecleando ls. Ahora bien, para definir la región de interés tenemos que enmascarar el cerebro, y para ello es necesario buscar la forma de identificar la región del cerebro que se quiere enmascarar. 
+
+El primer paso para obtener la región de interés será definir la estructura promedio del cerebro de nuestros pacientes para utilizarla como base para mostrar los resultados que se obtengan y para que a tevés de ella podamos definir la ROI. Para ello, desde la terminal de la VM escribiremos el siguiente código:
+
+
+```{bash, eval = FALSE}
+#Hemisferio izquierdo
+average_surfaces lh_average.obj none none 2 neuro_data/output/*/surfaces/*_mid_surface_rsl_left_81920.obj
+
+#Hemisferio derecho
+average_surfaces rh_average.obj none none 2 neuro_data/output/*/surfaces/*_mid_surface_rsl_right_81920.obj
+
+```
+
+
+En este caso lh_avergare.obj es nuestro archivo de salida mientras que _nuero_data/..._ contiene los archivos .obj de la estructura del cerebro de los individuos dentro de nuestro estudio. Note que es un objeto en 3D. 
+
+La ROI que nos interesa es el cerebro sin la zona subcortical. Dentro de los archivos generados con CIVET cada paciente tiene una máscara de la región subcortical la cual, en nuestro caso, se encuentra dentro de la siguiente ruta: _neuro_data/output/*/temp/*_subcortical_mask.mnc_, "*" hace referencia al id de cada individuo. 
+
+Note que la extensión del archivo es _mnc_ propia del CIVET. Lo que haremos ahora, será proyectar para cada individuo dentro del estudio esta región, dentro del cerebro de cada uno de ellos y luego determinar en forma de un mapa de vértices aquellos que pertenezcan a dicha región. Para ello en terminal ejecutamos lo siguiente:
+
+```{bash, eval = FALSE}
+Hemosferio izquierdo:
+for file in neuro_data/output/*/temp/*_subcortical_mask.mnc; do volume_object_evaluate $file neuro_data/output/$(basename -s _subcortical_mask.mnc $file)/surfaces/$(basename -s _subcortical_mask.mnc $file)_mid_surface_left_81920.obj ROI2/ROI/$(basename -s .mnc $file)_left.txt; done
+
+Hemisferio derecho:
+for file in neuro_data/output/*/temp/*_subcortical_mask.mnc; do volume_object_evaluate $file neuro_data/output/$(basename -s _subcortical_mask.mnc $file)/surfaces/$(basename -s _subcortical_mask.mnc $file)_mid_surface_right_81920.obj ROI2/ROI/$(basename -s .mnc $file)_right.txt; done
+
+```
+
+
+Cada uno de esos archivos .txt contiene 0 y valores positivos, esos últimos hacen referencia a la zona subcortical del cerebro. Lo siguiente es procesar estos archivos, convertiremos los 0's en 1's y los valores positivos en 0's, con ello lo que tendremos es una máscara de lo que NO es la zona subcortical.
+
