@@ -1,0 +1,51 @@
+---
+title: "Modelo Regresión"
+author: "Jorge Garcia"
+date: "2024-06-11"
+output: html_document
+---
+
+```{r, message=FALSE, warning=FALSE}
+library(tibble)
+library(tidyverse)
+```
+
+
+Este documento esta disenado para poder correr una prueba estadistica haciendo uso de RMINC y la documentacion de CIVET. La idea es hacer una explicacion integral de la prueba incluyendo la parte de la ejecucion asi como la explicacion de los outputs. 
+
+Para poder realizar la prueba haremos uso de la VM que con la que ya hemos precesado la región de interés para cada paciente. Esta VM como ya los hemos explicado tiene instalado por default _RStudio_ y la librería _RMINC_. En la siguiente liga se puede encontrar la documentación de dicha llibrería <https://mouse-imaging-centre.github.io/RMINC/index.html>. 
+
+Esta librería esta diseñada para trabajar con archivos obtenidos bajo el pipline definido por CIVET y es capaz de realizar algunas pruebas estadísticas incluyendo modelos de regresión multiple. Aunque la idea no es entrar mucho en detalle, el modelo que se aplicará consiste en hacer multiples regresiones, de manera más específica se pretende hacer una regresión por cada vértice considerando cada paciente, eso no da un total del 40,962 regresiones, puesto que cada archivo que comprende el grosor cortical consta de dicho número de vértices. 
+
+El modelo se explica de la forma tradicional, es decir:
+
+$$v_i = var_1 + var_2 + ... + var_n$$
+
+
+en donde $i$ va de 1 hasta 40.962 y n serán las variables que ocupe el modelo. 
+
+### Construcción del data set
+
+Para contruir el data set que necesitamos, vamos a partir como base un data set que contenga el id que identifica cada uno de nuestoros individuos de estudio y sus respectivas variables, en este caso estmos agregando las siguientes: DX_bl que hace referencia a si el individuo es paciente o es grupo control, Age, Gender, IDG e IM. En realidad nuestras variables de interés son las dos últimas que corresponden al índice de desigualdad de género y el indice de marginación respectivamente. 
+
+De modo que importamos nuestros datos:
+
+```{r}
+data <- read.csv('Inputs/ADNI_VFComplete.csv')
+head(data) %>% as_tibble()
+```
+
+
+Lo siguiente será cerar un par de columnas que hagan referencia a la ruta en donde se encuentran los archivos de cada individuo dentro del estudio ya sea hemisferio derecho o izquierdo. Para eso ejecutamos el siguiente código:
+
+```{r}
+data$left_thickness <- paste("ROI2/ROI/thickness_left/",data$ID,"_native_rms_rsl_tlaplace_30mm_left.txt", sep="")
+data$right_thickness <- paste("ROI2/ROI/thickness_right/",data$ID,"_native_rms_rsl_tlaplace_30mm_right.txt", sep="")
+```
+
+
+Lo anterior nos crea dos columnas en donde, según sea el nombre, hace referencia al hemisferio izquierdo o derecho.
+
+
+
+
