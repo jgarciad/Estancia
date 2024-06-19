@@ -36,7 +36,7 @@ head(data) %>% as_tibble()
 ```
 
 
-Lo siguiente será cerar un par de columnas que hagan referencia a la ruta en donde se encuentran los archivos de cada individuo dentro del estudio ya sea hemisferio derecho o izquierdo. Para eso ejecutamos el siguiente código:
+Lo siguiente será crear un par de columnas que hagan referencia a la ruta en donde se encuentran los archivos de cada individuo dentro del estudio ya sea hemisferio derecho o izquierdo. Para eso ejecutamos el siguiente código:
 
 ```{r}
 data$left_thickness <- paste("ROI2/ROI/thickness_left/",data$ID,"_native_rms_rsl_tlaplace_30mm_left.txt", sep="")
@@ -45,6 +45,57 @@ data$right_thickness <- paste("ROI2/ROI/thickness_right/",data$ID,"_native_rms_r
 
 
 Lo anterior nos crea dos columnas en donde, según sea el nombre, hace referencia al hemisferio izquierdo o derecho.
+
+### Modelo
+
+Una vez que hemos construido el data set, lo siguiente será aplicar el modelo. Para ello hemos de usar la librería RMINC con la cual podemos ajustar nuestro modelo de manera muy sencilla además de hacer las pruebas FDR. 
+
+```{r, eval=FALSE}
+library(RMINC)
+
+```
+
+
+```{r, eval=FALSE}
+#Modelo 1
+vs_left <- vertexLm(left_thickness ~ IDG, data)
+vs_right <- vertexLm(right_thickness ~ IDG, data)
+
+#Modelo 2
+vs_left <- vertexLm(left_thickness ~ IDG + IM, data)
+vs_right <- vertexLm(right_thickness ~ IDG + IM, data)
+```
+
+
+Las expresiones anteriores hacen referencia a un modelo en donde la variable dependiente es cada vértice, mientras que las variables explicativas son el IDG y el IM. El resultado será un objeto que contiene los valores T correspondientes a cada variable dento del modelo incluyendo el intercepto. 
+
+Ahora a dicho objeto aplicamos la prueba FDR sobre el modelo para elegir para escoger los valores T que sean significativos para el modelo aplicando dicha prueba correctiva. 
+
+```{r, eval=FALSE}
+mask_left <- read.table("ROIFinal/Subcortical_left.txt")
+mask_right <- read.table("ROIFinal/Subcortical_right.txt")
+
+vs_FDR_left <- vertexFDR(vs_left, mask= mask_left) 
+vs_FDR_right <- vertexFDR(vs_right, mask= mask_right)
+```
+
+
+Note que en la expresión anterior hemos agregado un argumento que hace referencia a la mascara que hemos definido para la zona subcortical, es imporante agregar dicho argumento puesto que como se podra notar, los valores T asociados a los vértices que hacen referencia a la zona subcortical son nulos. 
+
+Ahora que tenemos la salida de las pruebas FDR, lo siguiente será imprimir el resultado para cada hemisferio y determinar el treshold que nos permita filtrar aquellos valores T que resultan ser significativos. En nuestro caso, el filtro no lo haremos directamente en este documento, pero se puede programar, es decir se pueden llevar a cero aquellos valores T asociados a los vertices que de acuerdo a la prueba FDR no son significativos. 
+
+Finalmente, imprimimos los resultados, mismos que proyectaremos en el cerebro promedio que se ha definido. 
+
+```{r, eval=FALSE}
+write.table(vs_FDR_left, "Modelo/model1_fdr_test_left_idg_im.txt", row.names = FALSE, col.names = FALSE)
+write.table(vs_left[,7], "Modelo/model1_regresion_test_left_idg_im.txt", row.names = FALSE, col.names = FALSE)
+write.table(vs_left[,8], "Modelo/model1_regresion_test_left_idg_imvar.txt", row.names = FALSE, col.names = FALSE)
+
+write.table(vs_FDR_right, "Modelo/model1_fdr_test_right_idg_im.txt", row.names = FALSE, col.names = FALSE)
+write.table(vs_right[,7], "Modelo/model1_regresion_test_right_idg_im.txt", row.names = FALSE, col.names = FALSE)
+write.table(vs_right[,8], "Modelo/model1_regresion_test_right_idg_imvar.txt", row.names = FALSE, col.names = FALSE)
+
+```
 
 
 
