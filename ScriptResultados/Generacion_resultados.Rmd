@@ -1,0 +1,32 @@
+---
+title: "Generación de resultados"
+output:
+  html_document:
+    df_print: paged
+---
+
+En este documento explicamos cómo plasmar los resultados obtenidos en el cerebro con ayuda de MINC. Para ello, vamos a utilizar la VM que hemos venido utilizando para realizar el procesamiento de los archivos así como correr el modelo. 
+
+Este último tgenera unos reportes que contienen los valores T por cada vértice, recordar que cada valor esta asociado a un modelo de regresión lineal. el siguiente paso será conservar aquellos valores T que en valor absoluto son mayores que el treshold definido por la prueba FDR, apra aqullos que no cumplen con dicha condición la idea es ponerlos en 0, que en este caso representa un valor neutro. 
+
+Lo anterior se puede hacer de manera muy sencilla utilizando R o incluso Excel. Una vez que se tiene el archivo final que contine los calores T para aquellos vertices que resultan ser significativos, lo siguiente será plasmar los resultados en la estrictira cerebral promedio que ya hemos definido. Para ello, primero generamos la visión 3D de nuestro cerebro promedio con el siguiente código escrito en la terminal de la VM:
+
+```{bash, eval=FALSE}
+
+cd /media/sf_Estancia
+Display lh_average.obj
+
+```
+
+Lo anterior nos lleva a la ruta donde esta nuestra carpeta principal, prosteriormente el comando _Display_ genera una vista 3D el cual se ve de la siguiente manera. 
+
+<center>
+![](Imagenes/Subortical_left_example.png){height="300" width=40% }
+</center>
+
+
+
+
+Sobre dicha imagen vamos a proyectar los resultados. Lo siguiente.....
+
+

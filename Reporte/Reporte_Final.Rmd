@@ -1,0 +1,509 @@
+---
+title: "Desigualdad de género, marginación y el cerebro humano"
+author: "Jorge Garcia"
+date: "2024-03-02"
+output: 
+  pdf_document:
+    fig_caption: yes
+header-includes:
+  - \renewcommand{\and}{\\}
+  - \renewcommand{\figurename}{Figura}
+  - \usepackage{float}
+  - \floatplacement{figure}{H}
+bibliography: referencias.bib
+link-citations: yes
+linkcolor: blue
+csl: apa-numeric-brackets.csl
+nocite: '@*'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(sf)
+library(leaflet)
+library(cowplot)
+library(ggplot2)
+library(magick)
+library(grid)
+library(png)
+require(gridExtra)
+library(patchwork)
+```
+
+> *"La extensión de los derechos de la mujer es el principio básico de todo progreso social"* - Charles Fourier, escritor francés
+
+\section{Introducción}
+
+En los últimos años la sociedad lucha de manera incansable contra efectos de desigualdad y marginación. Cada día más personas, en especial mujeres, se suman a un movimiento para reclamar igualdad de condiciones en un entorno en donde, a pesar de que las leyes dictan dicha igualdad, no pasa así en muchas de las acciones que vemos en el día a día. De igual forma, muchas organizaciones civiles luchas por erradicar la marginación que se vive en muchas regiones no sólo de México sino en el mundo. Este comportamiento desigual que a últimas se ha logrado disminuir en cierta forma también trae consigo otro tipo de repercusiones menos comunes, pero igual de importantes como lo son los efectos a la salud.
+
+En este ámbito, han surgido varios estudios como [@zugman_country-level_2023] en donde por país, se habla de que los niveles de desigualdad de género están asociados con diferencias estructurales en los cerebros de hombres y mujeres en donde resaltan países con mayor desigualdad de género o en estudios como [@imach2008habilidades] demuestran que la pobreza afecta la capacidad cognitiva de los niños. La marginación también puede afectar nuestras emociones pues nuestro cuerpo puede estar sujeto a contantes cambios de humor, estrés, ansiedad que incluso desde edades muy tempranas pueden presentarse.
+
+Basados en esta idea, el objetivo del presente artículo es analizar el grosor cortical de un grupo de individuos distribuido en pacientes y sujetos sanos. El grosor cortical, como describiremos con más detalle interviene en funciones cognitivas tan importantes como la percepción, el leguaje, la memoria o la conciencia [@burgaleta2014cognitive].  
+
+
+
+\section{Explicación del problema}
+
+Ya hemos mencionado el grosor cortical, pero en realidad qué es. La estructura del cerebro es tan compleja que existen aparatos especializados para obtener un mapa de este desde distintos ángulos y en distintas dimensiones. Una forma de obtener este mapa del cerebro es mediante el uso de resonancias magnéticas (MRI por sus siglas en inglés) en donde con el uso de scanners especiales se obtiene información muy valiosa del cerebro que permite entender su estructura cerebral mediante imágenes y medidas de interés como lo es el grosor cortical. 
+
+Este último, no es más que un mapa de vértices con un orden previamente establecido y donde cada vértice es la medida en milímetros de la zona del cerebro que representa. Al unir cada vértice con softwares especiales podemos obtener un mapeo del grosor cortical y sus variaciones en las distintas zonas del cerebro. Bajo dicha estructura, es de nuestro interés explicar como la medida de cada vértice se ve afectada por variables cualitativas y cuantitativas para un grupo de individuos de los cuales se ha obtenido su resonancia magnética. 
+
+De manera específica estamos interesados en entender qué zonas de la corteza cerebral se ven afectadas por variables como lo es el Índice de Desigualdad (IDG) y el índice de Marginalidad (IM), este último publicado por el INEGI. El objetivo es entender mediante un modelo estadístico la influencia de dichas variables asociadas a cada individuo y su estructura cerebral vista desde la medida del grosor cortical. Este tipo de relaciones si bien, por si solas no pueden ayudar a diagnosticar algún problema en específico, si pueden servir como pauta para entender posibles anomalías como consecuencia de estar expuesto a altos niveles de marginalidad o de desigualdad basado en el historial clínico del paciente.
+
+
+
+\section{Modelo}
+
+
+### Planteamiento matemático
+
+Uno de los modelos más comunes para explicar el comportamiento de distintos fenómenos a través de características cualitativas y cuantitativas son los modelos de regresión. En nuestro particular caso esto no es la excepción. Un modelo de regresión está representado de la siguiente manera:
+
+$$(1)y_i = \beta_0 + \beta_1*x_{1i} + + \beta_2x_{2i} + ...+\beta_nx_{ni} + \epsilon_i, \:\:\:\:\:\:\:\:\:\: i = 1,...,N$$
+
+En donde $y_i$ representa la variable que queremos explicar a través de características observables $x_i$ correspondientes al objeto de estudio. El objetivo está en encontrar los valores $\beta's$ tales que minimicen el resultado entre ambos lados de la ecuación. Finalmente, para que se dé una condición de igualdad, agregamos $\epsilon_i$ que representa un remanente conocido como ruido aleatorio. 
+
+De manera más general, para n individuos, con m variables nuestro modelo queda representado de la siguiente manera:
+
+$$(2)Y = \beta X + \epsilon$$
+
+En donde $Y$ es un vector de $nx1$ variables, $\beta$ es un vector de $nx1$, $X$ es un vector de $n x (m+1)$ y a esto le añadimos el componente aleatorio que es un vector de $nx1$. La idea entonces es obtener los valores de $\beta$ que minimicen la diferencia entre los valores $Y$ y $\beta X$. El método más común para encontrar los valores $\beta$ es a través del método de mínimos cuadrados cuya representación matricial es la siguiente:
+
+$$(3)\beta = (X^{T}X)^{-1}X^{T}y$$
+
+Pensemos ahora que para cada sujeto $y_i$ tiene $p$ características distinta y para cada una de ellas nos interesa encontrar distintos valores de $\beta$ tales que se cumpla la ecuación
+
+$$(4)y_{vi} = \beta_0 + \beta_1*x_{1i} + + \beta_2x_{2i} + ...+\beta_nx_{ni} + \epsilon_i, \:\:\:\:\:\:\:\:\:\: i = 1,...,N$$
+Donde $v$ toma valores de 1 hasta $p$, esto implicaría tener $p$ modelos de regresión lineal, es decir múltiples regresiones lineales y para los cuales vamos a encontrar distintos valores de $\beta$. El método para obtener los valores de este último es casi el mismo que en (3) pero con una ligera variante, ya que ahora y será una matriz $Y$ de $nxp$ tal que:
+
+$$(5)\beta = (X^{T}X)^{-1}X^{T}Y$$
+
+Como resultado de ello, ahora tenemos múltiples regresiones lineales derivado de múltiples características de los individuos. 
+
+### Pruebas FDR
+
+Para cada modelo de regresión lineal se mide qué tan significativa resulta ser la relación entre la variable dependiente $y$ y las variables explicativas $x$. Esto se puede traducir como qué tan probable es que el coeficiente $\beta$ tome un valor distinto de cero. Para medir eso, se realiza una prueba de hipótesis sobre cada coeficiente tal que $H_0: \beta = 0$.
+
+Lo anterior significa hacer múltiples pruebas de hipótesis y por cuestiones prácticas es mejor evaluarlas observando el $p-valor$ asociado. La definición más práctica del $p-valor$ es aquella que lo describe como la probabilidad de obtener un valor tan extremo como la distribución de los datos bajo la hipótesis nula. Si esta probabilidad es pequeña, quiere decir que el valor observado comparado con la distribución del estadístico de prueba bajo la hipostasis nula es muy diferente, lo que nos sugiere rechazar $H_0$, en contraste, si la probabilidad es grande, es muy posible que el valor observado se derive de la distribución originada bajo $H_0$ y por ende no la rechazamos.
+
+Dado que tomamos decisiones con múltiple $p-value$ estadísticamente es posible que tomemos falsos positivos, por lo que es necesario tener una medición que nos permita decidir, que proporción de esos falsos positivos estamos dispuesto a aceptar para sacar conclusiones confiables de nuestros resultados. Eso ha dado origen a distintas pruebas de corrección que permiten medir este fenómeno, un método muy común para hacer esto es utilizando Tasas de Falsos Positivos o False Discovery Rate (FDR) por sus siglas en ingles.
+
+La siguiente definición se basa en [@benjamini1995controlling]. Considere el problema de probar de manera simultánea $m$ hipótesis nulas, de las cuales $m_0$ son verdad. Sea $R$ el número de hipótesis rechazadas. La tabla 1 resume de manera tradicional esta situación.
+
+
+|                  | No significativas| Significativas| Total|
+|:-----------------|:----:|:---:|:----:|
+|$H_0$ verdaderas     | $U$|   $V$|  m_0|
+|$H_0$ no verdaderas  | $T$|   $S$|  $m-m_0$|
+|Total        | $m-R$|   $R$|  $m$|
+
+Se asume que las $m$ hipótesis son conocidas. Note que $R$ es una variable aleatoria observada en donde si cada hipótesis nula se testea de manera individual a un nivel $\alpha$, entonces $R=R(\alpha)$ esta creciendo en $\alpha$. Por otro lado, $U$, $V$, $S$ y $T$ son variables aleatorias no observadas, de otra manera la prueba FDR no tendría sentido. Sea $Q$ tal que:
+
+$$(6)Q = \frac{V}{V+S}$$
+Es decir, dado que $V$ representa los casos que declaramos significativos dado que $H_0$ es verdadera, entonces $Q$ representa la proporción de hipótesis nulas rechazadas las cuales son erróneamente rechazadas. Naturalmente, definimos $Q = 0$ cuando $V+S = 0$ y por otro lado $Q$ es una variable aleatoria no observada. Definimos entonces FDR como:
+
+$$(7)FDR = Q_e = E(Q) = E(\frac{V}{V+S}) = E(\frac{V}{R})$$
+
+Es decir, la proporción esperada de rechazadas de manera errónea. Dado que la variable $R$ puede variar en función de $\alpha$ es necesario tener un control sobre la tasa FDR, por ejemplo, supongamos que estamos comprando dos tratamientos en múltiples subgrupos y se tienen que hacer recomendaciones separadas sobre el tratamiento preferido para cada subgrupo. Lo que buscamos entonces es descubrir tantas diferencias significativas como sea posible, alcanzando así decisiones operativas, pero estaríamos dispuestos a admitir una proporción preespecificada de errores (falsos positivos), es decir estaríamos dispuestos a trabajar bajo un umbral de proporción de errores considerando controlar la tasa FDR.
+
+Uno de los procedimientos más conocidos para controlar la tasa FDR es el que define Benferroni en [@benjamini1995controlling]. Considere probar $H_1, H_2, ...H_m$ basado en sus respectivos $p-valores$, $P_1, P_2,...P_m$. Sea $P_{(1)}\leqslant P_{(2)}\leqslant ...\leqslant P_{(m)}$ los $p-valores$ ordenados de menor a mayor tal que $H_{(i)}$ esta asociado al valor $P_{(i)}$. El control de la tasa FDR es tal que:
+
+$$(8)P_{(i)}\leqslant \frac{i}{m}q^{*}$$
+donde i será un valor entre 1 y $m$ que satisface la desigualdad, entonces rechazamos todas las $H_{(i)}$ asociadas a los $P-valores$ menores que $P_{(i)}$. Se puede probar que para cualquier configuración y para cualquier hipótesis nula falsa, el procedimiento descrito en (8), controla la tasa FDR en $q^{*}$
+
+De hecho, para cualquier $0\leqslant m_0\leqslant m$ y $p-valores$ independientes correspondientes a $H_0$ verdadera y para cualquier valor $m_1 = m - m_0$ $p-valores$ correspondientes a $H_0$ no verdadera considerando pruebas múltiples y siguiendo (8), se satisface que:
+
+
+$$(9) E(Q|P_{m_0 + 1} = p_1,...,P_m=p_{m_1}) \leqslant \frac{m_0}{m}q^{*} $$
+
+Ahora, suponiendo que $m_1 = m - m_0$ de las hipótesis son falsas. Sin importar la distribución conjunta de $P_1^{"},...P_{m_1}^{"}$ que corresponden a estas hipótesis falsas considerando (9) nosotros obtenemos:
+
+$$E(Q) \leqslant \frac{m_0}{m}q^* \leqslant q^*$$
+
+y la tasa FDR es controlada. 
+
+
+\section{Análisis Exploratorio}
+
+Se analizaron un total de 106 personas distribuidos en varios municipios dentro del país. Se tienen un total de 64 hombres con edad promedio de 25 años y un total de 42 mujeres con una edad promedio de 31 años. Dentro de nuestro grupo de estudio se cuenta con un grupo control de 50 individuos, mientras que el resto son pacientes. 
+
+Los individuos de estudio se encuentran distribuidos en 47 municipios, la mayoría de ellos se concentra en el centro del país, algunos de ellos en el norte y otros tantos en el sur. De estos municipios y de acuerdo con cifras del Índice de Marginación (IMN) publicadas por la CONAPO tenemos un total de 41 municipios con índice de marginación muy bajo, 3 con IM bajo, 2 con IM medio y sólo 1 con IM muy alto. El siguiente mapa muestra la distribución de los pacientes dentro de los municipios.
+
+
+
+```{r, include=FALSE}
+idg_pacientes <- read.csv('inputs/ADNI_VFComplete.csv')
+cte_municipio <- read.csv('inputs/cliente_municipio.csv')
+municipos <- st_read("Inputs/mg2022_integrado/conjunto_de_datos/00mun.shp")
+
+```
+
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", out.height="50%", fig.align='center'}
+municipos <- municipos %>% mutate(CodigoMunicipio = paste0(CVE_ENT,CVE_MUN))
+municipos <- municipos %>% mutate(CodigoMunicipio = as.numeric(CodigoMunicipio))
+no_pte_municipio <- cte_municipio %>% mutate(flag = 1) %>% group_by(CodigoMunicipio) %>% summarise(Total_pte = sum(flag))
+municipos1 <- left_join(municipos, no_pte_municipio, by = c("CodigoMunicipio"))
+municipos1 <- municipos1 %>% filter(Total_pte > 0)
+
+municipos2 <- municipos1 %>% select(Total_pte, geometry)
+municipos2 <- st_transform(municipos2, 4326)
+pal <- colorNumeric(
+  palette = "RdYlBu",
+  domain = municipos2$Total_pte
+)
+p_popup <- paste0("<strong>Número de pacientes: </strong>", municipos2$Total_pte)
+
+    
+map <- leaflet(municipos2) %>% addTiles()
+
+map %>%
+  addPolygons(stroke = FALSE, smoothFactor = 0.2, fillOpacity = 0.8,
+    color = ~pal(Total_pte),
+    popup = p_popup
+  ) %>%
+  addLegend("bottomright", pal = pal, values = ~Total_pte,
+    title = "Número de pacientes",
+    opacity = 1
+  )    
+
+```
+
+
+Por otro lado, recientemente el Programa de las Naciones Unidad para el Desarrollo (PNUD) presentó el "Informe de desarrollo humano 2010-2020: una década de transformaciones locales en México". Por primera vez el informe integra el Índice de Desigualdad de Género (IDG) a nivel municipal, el cual mide la desigualdad entre hombres y mujeres en un territorio específico a partir de tres componentes: empedramiento, participación en el mercado laboral y salud reproductiva. La interpretación del IDG municipal consiste en que, cuanto menor sea su valor, menos desigualdad. Para más información sobre la metodología de estudio se puede consultar [@noauthor_informe_nodate].
+
+La figura 2 muestra la distribución del IDG considerando todos los municipios de México. Las líneas punteadas muestran el valor mínimo, máximo y la media del IDG de los individuos dentro de nuestro estudio. La distribución del IDG tiene valores atípicos, con municipios con un IDG muy bajo, pero también otros con niveles muy altos, en nuestro caso no tenemos ninguna persona que se encuentre dentro de esos rangos de la distribución.
+
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, out.width="50%", fig.align='center'}
+idg_municipios <- read.csv("IDG_municipios_total.csv")
+idg_municipios %>% ggplot(aes(x = IDG)) + geom_histogram(fill = "lightblue") +
+  geom_vline(xintercept = min(idg_pacientes$IDG), linetype="dotted", color = "blue") +
+  geom_vline(xintercept = max(idg_pacientes$IDG), linetype="dotted", color = "blue") +
+  geom_vline(xintercept = mean(unique(unique(idg_pacientes$IDG))), linetype="dotted", color = "red") +
+  theme_bw() + ylab("")
+
+```
+
+
+Cada una de las variables anteriores (IDG, IM, Edad, Grupo y Genero) son parte de las variables explicativas dentro del modelo propuesto.
+Por otro lado, en el caso de las variables dependientes, como ya se mencionó a cada uno de los pacientes se le ha practicado una resonancia magnética o MRI. Las imágenes del cerebro se han obtenido con dos tipos de scanner GE y Siemens y han sido sujetas a controles de calidad para garantizar la veracidad de los datos. Dichas imágenes se han creado en formato _mnc_ uno de los más usados en medicina de acuerdo con [@larobina_medical_2014]. 
+
+De acuerdo con [@fninf] surgiendo en 1995 como una disciplina formal, la cartografía cerebral humana se ha convertido en una metodología de investigación indispensable en numerosos proyectos de investigación clínica básica que estudian diversas poblaciones utilizando neuroimagen. Los datos de neuroimagen recopilados en un estudio de cohorte típico son multi-espectrales y de multi-resolución, por lo que contienen un conjunto rico de metadatos relacionados con los parámetros de exploración o el diseño del estudio. Estos datos se integrarán en última instancia con una miríada de variables específicas del sujeto, como el comportamiento, biométricas y genéticas. Debido a que muchos de estos estudios son longitudinales y los datos se proporcionan a través de canales de múltiples fuentes, tanto el análisis en línea como el seguimiento de la procedencia son esenciales.
+
+El formato MINC para datos de neuro informática fue diseñado e implementado para apoyar esta visión, comenzando en 1992. El objetivo del proyecto era el desarrollo de un formato de datos y herramientas de programación para neuroimagen que incluyeran varias características que aún hoy siguen siendo bastante novedosas:
+
+* Un formato de encabezado extensible que incluye tanto la adquisición de datos como el historial de análisis.
+* Metadatos auto-documentados utilizando nombres de variables y atributos descriptivos legibles por humanos.
+* Soporte para alta dimensionalidad y sistemas de coordenadas arbitrarias, incluidas dimensiones muestreadas de forma irregular.
+
+Particularmente, las imágenes se obtuvieron con ayuda del CIVET el cual es un pipeline de procesamiento de imágenes cerebrales humanas para análisis corticométricos, morfométricos y volumétricos totalmente automatizados de imágenes de resonancia magnética (RM). El pipeline está compuesto por un conjunto de scripts Perl y programas de alto nivel en C/C++ [@noauthor_bic_nodate].
+
+El grosor cortical es uno de los outputs que se obtiene; para cada individuo se genera de forma ordenada un mapeo de los distintos vértices que conforman en cerebro en un archivo plano, en donde cada valor representa la medida en milímetros del grosor cortical. Para tener una idea a qué hace referencia esta medida la siguiente imagen ejemplifica lo que un vértice representa.  
+
+
+```{r, fig.show='hold', out.width = "50%", fig.align = "center", fig.cap="Ejemplo del cerebro de un paciente, cada punto representa un vértice", echo=FALSE}
+
+subcortical_region <- rasterGrob(readPNG("Imagenes/vertex_image_vf.png"), interpolate=TRUE)
+
+# grid.arrange(pre_fig, post_fig, ncol=2)
+grid.arrange(subcortical_region, ncol=1, nrow = 1)
+
+```
+
+Cada salida que hacer referencia al grosor cortical tiene un total de 40,962 vértices, cada uno de estos formará una regresión lineal en conjunto con el resto de los pacientes, es decir el primer vértice de cada paciente es procesado y se forma un primer modelo y así de manera sucesiva. En total se tendrían que realizar 40,962 regresiones con múltiples pruebas de hipótesis, este escenario es ideal para el modelo propuesto en la sección anterior y que será aplicado. 
+
+Es comúnmente sabido que el cerebro se compone de dos hemisferios, pero además de eso, existen zonas "estándar" en las que se divide para su estudio, dichas zonas son:
+
+* Lóbulo Frontal
+* Lóbulo Temporal
+* Lóbulo Parietal
+* Lóbulo Insular
+* Lóbulo Límbico
+* Lóbulo Occipital
+* Zona Subcortical
+
+En esta última zona del cerebro, entre otras cosas podemos encontrar el cerebelo que está asociado con funcionas motoras, por lo que para refinar el modelo esta parte será descartada del análisis pues no estamos relacionando nuestro estudio con este tipo de funcionalidades, es por ello que es necesario _enmascarar_ el cerebro, lo cual implica descartar los vértices adecuados. En el anexo de este documento se puede observar el procedimiento y el código utilizado para ello. La siguiente imagen muestra la región subcortical del cerebro de uno de los individuos de estudio.
+
+
+```{r, fig.show='hold', out.width = "50%", fig.align = "center", fig.cap="Región Subcortical del Cerebo. La escala muestra la intensidad en mm de los vértices", echo=FALSE}
+
+subcortical_region <- rasterGrob(readPNG("Imagenes/own_subcortical_image_example_vf.png"), interpolate=TRUE)
+
+# grid.arrange(pre_fig, post_fig, ncol=2)
+grid.arrange(subcortical_region, ncol=1, nrow = 1)
+
+```
+
+
+Finalmente, es verdad que cada imagen es normalizada para ser considerada previa al estudio, sin embargo, eso no implica que cada cerebro conserve ciertas particularidades, es por ello por lo que se necesita una referencia cerebral estándar el cuál será la estructura cerebral media respecto de cada individuo dentro del estudio para poder proyectar los resultados. En el anexo de este documento se puede revisar el procedimiento realizado para obtener el cerebro estándar sobre el cual veremos, en caso de que existan, las zonas influenciadas de manera estadística por el IDG y el IM.
+
+
+\section{Aplicación del modelo y resultados}
+
+Se proponen dos modelos de interés. El primero consiste en relacionar el grosor cortical con el IDG de forma directa, este primer modelo siguiere que bajo una tasa de falsos positivos de 15% el IDG tiene influencia en ciertas zonas del cerebro tanto para el hemisferio izquierdo como para el hemisferio derecho. La siguiente tabla muestra los resultados considerando tresholds en la prueba FDR de 1%, 5%, 10%, 15% y 20%
+
+Hemisferio izquierdo
+
+| Treshold              | F-statistic | tvalue-(Intercept) | tvalue-IDG |
+| :---------------- | :------: | ----: | ----: |
+| 1%       |   NA  | 8.807274 | NA |
+| 5%       |   NA   | 8.807274 | NA |
+| 10%    |  NA   | 8.807274 | NA |
+| 15% |  4.637186   | 8.807274 | 2.153413 |
+| 20% |  3.356472   | 8.807274 | 1.832068 |
+
+Hemisferio derecho
+
+| Treshold              | F-statistic | tvalue-(Intercept) | tvalue-IDG |
+| :---------------- | :------: | ----: | ----: |
+| 1%       |   NA  | 9.355915 | NA |
+| 5%       |   NA   | 9.355915 | NA |
+| 10%    |  NA   | 9.355915 | NA |
+| 15% |  3.908117   | 9.355915 | 1.976896 |
+| 20% |  2.827187   | 9.355915 | 1.681424 |
+
+
+La prueba nos indica que en el caso del hemisferio izquierdo los valores $T$ de la prueba deben superar el umbral de 2.15 mientras que en el caso del hemisferio derecho es de 1.98. El segundo modelo analizado contempla la relación dentro el grosor cortical, el IDG y el IM. El modelo planteado es como sigue:
+
+$CorticalTickness = IDG + IM$
+
+En este caso los resultado de la prueba FDR muestran una mayor confiabilidad del modelo pues muestra que en el caso del IDG la relación deja de ser despreciable a partir de un treshold de 10% y en el caso del IM desde el 1% ya existen valores estadísticamente significativos. Las siguientes tablas muestran los resultados de las pruebas FDR para ambos hemisferios:
+
+Hemisferio izquierdo:
+
+| Treshold              | F-statistic | tvalue-(Intercept) | tvalue-IDG | tvalue-IM |
+| :---------------- | :------: | ----: | ----: | ----: |
+| 1%       |   18.371772  | 2.675596 | NA | 5.646297 |
+| 5%       |   18.371772   | 2.019872 | NA | 4.957493 |
+| 10%    |  4.252772   | 1.686800 | 2.387421 | 4.583074 |
+| 15% |  2.938386   | 1.472713 | 1.962351 | 4.583074 |
+| 20% |  2.368125   | 1.310805 | 1.684022 | 2.343637 |
+
+
+Hemisferio derecho
+
+| Treshold              | F-statistic | tvalue-(Intercept) | tvalue-IDG | tvalue-IM |
+| :---------------- | :------: | ----: | ----: | ----: |
+| 1%       |   11.363943  | 2.684823 | NA | 4.428994 |
+| 5%       |   8.553654   | 2.020289 | NA | 3.759492 |
+| 10%    |  3.821878   | 1.688829 | 2.271406 | 3.326305 |
+| 15% |  2.896442   | 1.475385 | 1.849553 | 2.929601 |
+| 20% |  2.314915   | 1.313015 | 1.617411 | 2.552914 |
+
+
+Para el caso del IDG note que el valor del estadístico para ambos casos es muy similar con un treshold del 10%. Para el caso del IM, este valor difiere un poco más observando 4.58 para el hemisferio izquierdo y 3.32 para el caso del hemisferio derecho. Basado en este 10% lo cual parece una métrica bastante aceptable las proyección de las zonas afectadas tanto por el IM como por el IDG se muestran a continuación.
+
+
+
+```{r, echo=FALSE,fig.show='hold', out.width = "70%", fig.align = "center", fig.cap="Proyección IDG sobre el cerebro"}
+
+left_fig <- rasterGrob(readPNG("Imagenes/modelo_IDG_left_lateral_internal_view_vf.png"), interpolate=TRUE)
+leftext_fig <- rasterGrob(readPNG("Imagenes/modelo_IDG_left_lateral_view_vf.png"), interpolate=TRUE) 
+right_fig <- rasterGrob(readPNG("Imagenes/modelo_IDG_right_lateral_internal_view_vf.png"), interpolate=TRUE)
+rightext_fig1 <- rasterGrob(readPNG("Imagenes/modelo_IDG_right_lateral_view_vf.png"), interpolate=TRUE) 
+
+
+# grid.arrange(pre_fig, post_fig, ncol=2)
+grid.arrange(left_fig, right_fig, leftext_fig, rightext_fig1, ncol=2, nrow = 2)
+
+
+```
+
+
+
+Las siguiente figura muestra la proyección de los resultados en el caso del IM considerando un treshold del 10%.
+
+
+
+```{r, echo=FALSE,fig.show='hold', out.width = "70%", fig.align = "center", fig.cap="Proyección IM sobre zonas del cerebro afectadas. Del lado izquierdo vista interna y externa hemiserio izauierdo. De lado derecho, vistas del hemisferio derecho"}
+
+left_fig <- rasterGrob(readPNG("Imagenes/left_var_im_internal_view_vf.png"), interpolate=TRUE)
+leftext_fig <- rasterGrob(readPNG("Imagenes/left_var_im_external_view_vf.png"), interpolate=TRUE) 
+right_fig <- rasterGrob(readPNG("Imagenes/right_var_im_internal_view_vf.png"), interpolate=TRUE)
+rightext_fig1 <- rasterGrob(readPNG("Imagenes/right_var_im_external_view_vf.png"), interpolate=TRUE) 
+
+
+# grid.arrange(pre_fig, post_fig, ncol=2)
+grid.arrange(left_fig, right_fig, leftext_fig, rightext_fig1, ncol=2, nrow = 2)
+
+
+```
+
+
+\section{Conclusiones}
+
+Retomando en contexto de cada variable, se mencionan dos cosas:
+
+* Un valor más alto en el IDG se traduce en mayores niveles de desigualdad
+* Un valor más bajo en IM se traduce en mayores niveles de marginación
+
+Los resultados del modelo muestran justamente que mientras mayores niveles de IDG estadísticamente se tiende a tener menores niveles de grosor cortical, esto se puede observar en las escalas obtenidas en la figura 3 en donde todos los valores son negativos, esto quiere decir que mientras más elevado es el IDG menor será el grosor cortical. 
+
+Lo mismo, pero de forma contraria pasa con los niveles de marginación, en donde se puede observar que los valores de los coeficientes son positivos, esto quiere decir que mientras menor es el valor del IM se observa un menor grosor cortical. Esto muestra sin duda, que realmente existe un efecto adverso en los niveles del grosor cortical cuando estas variables son poco o nada favorables para el individuo. La siguiente gráfica muestra los niveles promedio del grosor cortical en las zonas afectadas por cada una de las variables.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", fig.align='center', fig.cap="Promedio del grosor cortical comparado contra el Ìndice de Desigualdad de Género"}
+
+id_pac <- cte_municipio$ID_cobra
+
+MM_left <- rep(0,106)
+#i <- 1
+for(i in 1:length(id_pac)){
+  aux <- read.table(paste0("Modelo/thickness/IDG/Left/",id_pac[i],"_native_rms_rsl_tlaplace_30mm_left.txt"), sep = ',')
+  aux <- transform(aux, V1 = (V1 - min(V1)) / (max(V1) - min(V1)))
+  MM_left[i] <- mean(aux$V1[aux$V1>0])
+  #print(i)
+} 
+
+idg_pacientes$MM_left <- MM_left
+
+
+MM_right <- rep(0,106)
+
+for(i in 1:length(id_pac)){
+  aux <- read.table(paste0("Modelo/thickness/IDG/Right/",id_pac[i],"_native_rms_rsl_tlaplace_30mm_right.txt"), sep = ',')
+  MM_right[i] <- mean(aux$V1[aux$V1>0])
+  #print(i)
+} 
+
+idg_pacientes$MM_right <- MM_right
+
+
+g1 <- idg_pacientes %>% ggplot(aes(x = IDG, y = MM_left)) + 
+  geom_point() +
+  geom_smooth(method="lm", se=FALSE) + theme_bw() + ggtitle("Hemisferio Izquierdo") +
+  ylab("") + xlab("")
+
+
+g2 <- idg_pacientes %>% ggplot(aes(x = IDG, y = MM_right)) + 
+  geom_point() +
+  geom_smooth(method="lm", se=FALSE) + theme_bw() + ggtitle("Hemisferio Derecho") +
+  ylab("") + xlab("")
+
+
+grid.arrange(g1,g2, nrow = 2, ncol = 1, left = "Grosor Cortical", bottom = 'IDG')
+
+```
+
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", fig.align='center', fig.cap="Promedio del grosor cortical comparado contra el indice de marginalidad"}
+
+
+IM_left <- rep(0,106)
+#i <- 1
+for(i in 1:length(id_pac)){
+  aux <- read.table(paste0("Modelo/thickness/IM/Left/",id_pac[i],"_native_rms_rsl_tlaplace_30mm_left.txt"), sep = ',')
+  aux <- transform(aux, V1 = (V1 - min(V1)) / (max(V1) - min(V1)))
+  IM_left[i] <- mean(aux$V1[aux$V1>0])
+  #print(i)
+} 
+
+idg_pacientes$IM_left <- IM_left
+
+
+IM_right <- rep(0,106)
+
+for(i in 1:length(id_pac)){
+  aux <- read.table(paste0("Modelo/thickness/IM/Right/",id_pac[i],"_native_rms_rsl_tlaplace_30mm_right.txt"), sep = ',')
+  IM_right[i] <- mean(aux$V1[aux$V1>0])
+  #print(i)
+} 
+
+idg_pacientes$IM_right <- IM_right
+
+
+g1 <- idg_pacientes %>% ggplot(aes(x = IM, y = IM_left)) + 
+  geom_point() +
+  geom_smooth(method="lm", se=FALSE) + theme_bw() + ggtitle("Hemisferio Izquierdo") +
+  ylab("") + xlab("")
+
+
+g2 <- idg_pacientes %>% ggplot(aes(x = IM, y = IM_right)) + 
+  geom_point() +
+  geom_smooth(method="lm", se=FALSE) + theme_bw() + ggtitle("Hemisferio Derecho") +
+  ylab("") + xlab("")
+
+
+grid.arrange(g1,g2, nrow = 2, ncol = 1, left = "Grosor Cortical", bottom = 'IM')
+
+
+
+
+```
+
+
+Se observa claramente una tendencia de cambio estructural en el grosor cortical en función del IDG y el IM. En cambio, cuando se explora el resultado de ambos hemisferios considerando el género, si bien existe un cambio en la estructura del grosor cortical no podemos concluir si afecta más a hombres o a mujeres. Esto quizá se deba a que la muestra de pacientes no es tan grande separada por sexo. Las siguientes gráficas muestran para cada variable el cambio del grosor cortical en función de cada variable.
+
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, out.width="50%", fig.align='center', fig.cap="Promedio del grosor cortical comparado contra el Índice de Desigualdad de Género"}
+
+g1 <- idg_pacientes %>% ggplot(aes(x = IDG, y = MM_left, colour = as.factor(Gender))) + 
+  geom_point() +
+  geom_smooth(method="lm", se=FALSE) + theme_bw() + ggtitle("Hemisferio Izquierdo") +
+  ylab("") + xlab("")
+
+g2 <- idg_pacientes  %>% ggplot(aes(x = IDG, y = IM_right, colour = as.factor(Gender))) + 
+  geom_point() +
+  geom_smooth(method="lm", se=FALSE) + theme_bw() + ggtitle("Hemisferio Derecho") +
+  ylab("") + xlab("")
+
+grid.arrange(g1,g2, nrow = 2, ncol = 1, left = "Grosor Cortical", bottom = 'IDG')
+
+
+```
+
+
+
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", fig.align='center', fig.cap="Promedio del grosor cortical comparado contra el Índice de Marginación"}
+
+g1 <- idg_pacientes  %>% ggplot(aes(x = IM, y = IM_left, colour = as.factor(Gender))) + 
+  geom_point() +
+  geom_smooth(method="lm", se=FALSE) + theme_bw() + ggtitle("Hemisferio Izquierdo") +
+  ylab("") + xlab("")
+
+g2 <- idg_pacientes %>% ggplot(aes(x = IM, y = IM_right, colour = as.factor(Gender))) + 
+  geom_point() +
+  geom_smooth(method="lm", se=FALSE) + theme_bw() + ggtitle("Hemisferio Izquierdo") +
+  ylab("") + xlab("")
+
+grid.arrange(g1,g2, nrow = 2, ncol = 1, left = "Grosor Cortical", bottom = 'IM')
+
+
+
+```
+
+
+Note que el caso del hemisferio derecho ambas variables muestran un efecto en el cambio estructural del grosor cortical. En el caso del IDG, los niveles se ven más afectados en el caso de los hombres, mientras que en el caso del índice de marginación las repercusiones son prácticamente iguales. El hemisferio menos afectado es el izquierdo, en donde para el caso del IDG estadísticamente no existe un cambio en el caso de las mujeres y muy ligeramente en el caso de lo hombre, mientras que en el índice de marginación la pendiente es muy similar en ambos sexos si se compara con el del hemisferio derecho. 
+
+Lo observado hasta ahora permite concluir un par de cosas, en primer lugar, que existe evidencia significativa que muestra que claramente el valor del IDG y el IM afecta la estructura del cerebro, pero a su vez no prueba de manera contundente si afecta más a hombre o a mujeres. Esto último podría ser más concluyente si consideramos un aumento en la muestra de hombres y mujeres. Finalmente, nuestra investigación permite de alguna manera crear un antecedente considerando el entorno social de una persona en donde basado en eso, se pueda dar pie a posibles causas de anomalías que tengan que ver con la estructura cerebral.
+
+
+
+\newpage
+
+\section{Bibliografía}
+
+
+<div id="refs"></div>
+
+\newpage
+\section{Anexo}
+
+
+
+
+
+
+
+
+
+
