@@ -38,22 +38,21 @@ library(patchwork)
 
 \section{Introducción}
 
-En los últimos años la sociedad lucha de manera incansable contra efectos de desigualdad y marginación. Cada día más personas, en especial mujeres, se suman a un movimiento para reclamar igualdad de condiciones en un entorno en donde, a pesar de que las leyes dictan dicha igualdad, no pasa así en muchas de las acciones que vemos en el día a día. De igual forma, muchas organizaciones civiles luchas por erradicar la marginación que se vive en muchas regiones no sólo de México sino en el mundo. Este comportamiento desigual que a últimas se ha logrado disminuir en cierta forma también trae consigo otro tipo de repercusiones menos comunes, pero igual de importantes como lo son los efectos a la salud.
+La desigualdad de género y la marginación son un par de problemas que desde hace siglos han estado presentes en nuestra sociedad. Si bien, con el paso de los años ambos problemas han disminuido, aún en nuestros días estan presentes en mayor o menor grado según el país y el lugar de origen al que se pertenece y lo que es un hecho es que de una u otra forma pueden traer consigo repercusiones en nuestra salud física y mental.
 
-En este ámbito, han surgido varios estudios como [@zugman_country-level_2023] en donde por país, se habla de que los niveles de desigualdad de género están asociados con diferencias estructurales en los cerebros de hombres y mujeres en donde resaltan países con mayor desigualdad de género o en estudios como [@imach2008habilidades] demuestran que la pobreza afecta la capacidad cognitiva de los niños. La marginación también puede afectar nuestras emociones pues nuestro cuerpo puede estar sujeto a contantes cambios de humor, estrés, ansiedad que incluso desde edades muy tempranas pueden presentarse.
+Por ejemplo, estudios como [@zugman_country-level_2023] indican que los niveles de desigualdad de género están asociados con diferencias estructurales en los cerebros de hombres y mujeres en distintos países, o como [@imach2008habilidades] demuestran que la pobreza afecta la capacidad cognitiva de los niños. Estos resultados demuestran que las afectaciones provocadas por la desigualdad y la marginación van mucho más allá de condiciones como estrés o ansiedad.
 
-Basados en esta idea, el objetivo del presente artículo es analizar el grosor cortical de un grupo de individuos distribuido en pacientes y sujetos sanos. El grosor cortical, como describiremos con más detalle interviene en funciones cognitivas tan importantes como la percepción, el leguaje, la memoria o la conciencia [@burgaleta2014cognitive].  
+Con base en esta idea, el objetivo del presente artículo es analizar el grosor cortical de un grupo de individuos y si existe alguna asociación de éste con respecto a los índices de marginación y desigualdad en sus lugares de origen. Como describiremos con más detalle, el gorsor cortical interviene en funciones cognitivas tan importantes como la percepción, el leguaje, la memoria o la conciencia [@burgaleta2014cognitive].  
 
-
+Particularmente, para este estudio se obtuvieron imagenes del cerebro con ayuda del CIVET, el cual es un pipeline de procesamiento de imágenes cerebrales humanas para análisis corticométricos, morfométricos y volumétricos totalmente automatizados que se obtienen con resonancia magnética (RM). El pipeline está compuesto por un conjunto de scripts Perl y programas de alto nivel en C/C++ [@noauthor_bic_nodate].
 
 \section{Explicación del problema}
 
-Ya hemos mencionado el grosor cortical, pero en realidad qué es. La estructura del cerebro es tan compleja que existen aparatos especializados para obtener un mapa de este desde distintos ángulos y en distintas dimensiones. Una forma de obtener este mapa del cerebro es mediante el uso de resonancias magnéticas (MRI por sus siglas en inglés) en donde con el uso de scanners especiales se obtiene información muy valiosa del cerebro que permite entender su estructura cerebral mediante imágenes y medidas de interés como lo es el grosor cortical. 
+El problema central de este estudio radica en explicar la estrucutra cerebral en función del Índice de Desigualdad de Género (IDG) y el Índice de Marginación (IM). De manera específica estamos interesados en entender mediante un modelo estadístico la influencia de dichas variables asociadas a cada individuo y su estructura cerebral vista desde la medida del grosor cortical. Este tipo de relaciones si bien, por sí solas no pueden ayudar a diagnosticar algún problema en específico, sí pueden servir como pauta para entender posibles anomalías como consecuencia de estar expuesto a altos niveles de marginalidad o de desigualdad basado en el historial clínico del paciente.
 
-Este último, no es más que un mapa de vértices con un orden previamente establecido y donde cada vértice es la medida en milímetros de la zona del cerebro que representa. Al unir cada vértice con softwares especiales podemos obtener un mapeo del grosor cortical y sus variaciones en las distintas zonas del cerebro. Bajo dicha estructura, es de nuestro interés explicar como la medida de cada vértice se ve afectada por variables cualitativas y cuantitativas para un grupo de individuos de los cuales se ha obtenido su resonancia magnética. 
+Con ayuda de CIVET se obtiene un mapa de vértices con un orden previamente establecido, donde cada vértice es la medida en milímetros del grosor cortical sobre la zona del cerebro que representa. Al unir cada vértice podemos obtener un mapeo completo de la corteza cerebral y sus variaciones en las distintas zonas del cerebro. Bajo dicha estructura, se busca explicar como la medida de cada vértice se ve afectada por nuestras variables de interés para un grupo de individuos de los cuales se ha obtenido su resonancia magnética. 
 
-De manera específica estamos interesados en entender qué zonas de la corteza cerebral se ven afectadas por variables como lo es el Índice de Desigualdad (IDG) y el índice de Marginalidad (IM), este último publicado por el INEGI. El objetivo es entender mediante un modelo estadístico la influencia de dichas variables asociadas a cada individuo y su estructura cerebral vista desde la medida del grosor cortical. Este tipo de relaciones si bien, por si solas no pueden ayudar a diagnosticar algún problema en específico, si pueden servir como pauta para entender posibles anomalías como consecuencia de estar expuesto a altos niveles de marginalidad o de desigualdad basado en el historial clínico del paciente.
-
+Nuestro objetivo entonces, será entender si realmente existe un efecto significativo que nos permita concluir:¿realmente existe una influencia positiva o negativa sobre el grosor cortical?, en caso de que así sea, plasmar qué zonas del cerebro están siendo afectadas y si afecta más a hombres o mujeres. 
 
 
 \section{Modelo}
@@ -63,41 +62,41 @@ De manera específica estamos interesados en entender qué zonas de la corteza c
 
 Uno de los modelos más comunes para explicar el comportamiento de distintos fenómenos a través de características cualitativas y cuantitativas son los modelos de regresión. En nuestro particular caso esto no es la excepción. Un modelo de regresión está representado de la siguiente manera:
 
-$$(1)y_i = \beta_0 + \beta_1*x_{1i} + + \beta_2x_{2i} + ...+\beta_nx_{ni} + \epsilon_i, \:\:\:\:\:\:\:\:\:\: i = 1,...,N$$
+$$(1)y_i = \beta_0 + \beta_1x_{1i} + + \beta_2x_{2i} + ...+\beta_nx_{ni} + \epsilon_i, \:\:\:\:\:\:\:\:\:\: i = 1,...,N$$
 
-En donde $y_i$ representa la variable que queremos explicar a través de características observables $x_i$ correspondientes al objeto de estudio. El objetivo está en encontrar los valores $\beta's$ tales que minimicen el resultado entre ambos lados de la ecuación. Finalmente, para que se dé una condición de igualdad, agregamos $\epsilon_i$ que representa un remanente conocido como ruido aleatorio. 
+En donde $y_i$ representa la variable que queremos explicar a través de características observables $x_i$ correspondientes al objeto de estudio. El objetivo está en encontrar los valores $\beta's$ tales que minimicen el error entre ambos lados de la ecuación. Finalmente, para que se dé una condición de igualdad, agregamos $\epsilon_i$ que representa un remanente conocido como ruido aleatorio. 
 
-De manera más general, para n individuos, con m variables nuestro modelo queda representado de la siguiente manera:
+De manera más general, para $n$ individuos, con $m$ variables nuestro modelo queda representado de la siguiente manera:
 
 $$(2)Y = \beta X + \epsilon$$
 
-En donde $Y$ es un vector de $nx1$ variables, $\beta$ es un vector de $nx1$, $X$ es un vector de $n x (m+1)$ y a esto le añadimos el componente aleatorio que es un vector de $nx1$. La idea entonces es obtener los valores de $\beta$ que minimicen la diferencia entre los valores $Y$ y $\beta X$. El método más común para encontrar los valores $\beta$ es a través del método de mínimos cuadrados cuya representación matricial es la siguiente:
+En donde $Y$ es un vector de $n\times1$ variables, $\beta$ es un vector de $n\times1$, $X$ es un vector de $n\times(m+1)$ y a esto le añadimos el componente aleatorio que es un vector de $n\times1$. La idea entonces es obtener los valores de $\beta$ que minimicen la diferencia entre los valores $Y$ y $\beta X$. El método más común para encontrar los valores $\beta$ es a través del método de mínimos cuadrados cuya representación matricial es la siguiente:
 
 $$(3)\beta = (X^{T}X)^{-1}X^{T}y$$
 
-Pensemos ahora que para cada sujeto $y_i$ tiene $p$ características distinta y para cada una de ellas nos interesa encontrar distintos valores de $\beta$ tales que se cumpla la ecuación
+Pensemos ahora que cada sujeto $y_i$ tiene $p$ características distintas y para cada una de ellas nos interesa encontrar distintos valores de $\beta$ tales que se cumpla la ecuación
 
-$$(4)y_{vi} = \beta_0 + \beta_1*x_{1i} + + \beta_2x_{2i} + ...+\beta_nx_{ni} + \epsilon_i, \:\:\:\:\:\:\:\:\:\: i = 1,...,N$$
-Donde $v$ toma valores de 1 hasta $p$, esto implicaría tener $p$ modelos de regresión lineal, es decir múltiples regresiones lineales y para los cuales vamos a encontrar distintos valores de $\beta$. El método para obtener los valores de este último es casi el mismo que en (3) pero con una ligera variante, ya que ahora y será una matriz $Y$ de $nxp$ tal que:
+$$(4)y_{vi} = \beta_0 + \beta_1x_{1i} + + \beta_2x_{2i} + ...+\beta_nx_{ni} + \epsilon_i, \:\:\:\:\:\:\:\:\:\: i = 1,...,N$$
+Donde $v$ toma valores de 1 hasta $p$, esto implicaría tener $p$ modelos de regresión lineal, es decir múltiples regresiones lineales para las cuales vamos a encontrar distintos valores de $\beta$. El método para obtener los valores de este último es casi el mismo que en (3) pero con una ligera variante, ya que ahora la variable dependiente será una matriz $Y$ de $n\times p$ tal que:
 
 $$(5)\beta = (X^{T}X)^{-1}X^{T}Y$$
 
 Como resultado de ello, ahora tenemos múltiples regresiones lineales derivado de múltiples características de los individuos. 
 
-### Pruebas FDR
+### False Discovery Rate (FDR)
 
-Para cada modelo de regresión lineal se mide qué tan significativa resulta ser la relación entre la variable dependiente $y$ y las variables explicativas $x$. Esto se puede traducir como qué tan probable es que el coeficiente $\beta$ tome un valor distinto de cero. Para medir eso, se realiza una prueba de hipótesis sobre cada coeficiente tal que $H_0: \beta = 0$.
+Para cada modelo de regresión lineal se mide qué tan significativa resulta ser la relación entre la variable dependiente $y$ y las variables explicativas $x$. Esto se puede traducir como qué tan probable es que el coeficiente $\beta$ tome un valor distinto de cero. Para medir eso, se realiza una prueba de hipótesis sobre cada coeficiente tal que la hipótesis nula es $H_0: \beta = 0$.
 
-Lo anterior significa hacer múltiples pruebas de hipótesis y por cuestiones prácticas es mejor evaluarlas observando el $p-valor$ asociado. La definición más práctica del $p-valor$ es aquella que lo describe como la probabilidad de obtener un valor tan extremo como la distribución de los datos bajo la hipótesis nula. Si esta probabilidad es pequeña, quiere decir que el valor observado comparado con la distribución del estadístico de prueba bajo la hipostasis nula es muy diferente, lo que nos sugiere rechazar $H_0$, en contraste, si la probabilidad es grande, es muy posible que el valor observado se derive de la distribución originada bajo $H_0$ y por ende no la rechazamos.
+Lo anterior significa hacer múltiples pruebas de hipótesis y por cuestiones prácticas es mejor evaluarlas observando el $p-valor$ asociado. La definición más práctica del $p-valor$ es aquella que lo describe como la probabilidad de obtener un valor tan extremo como la distribución de los datos bajo la hipótesis nula. Si esta probabilidad es pequeña, quiere decir que el valor observado comparado con la distribución del estadístico de prueba bajo la hipótesis nula es muy diferente, lo que nos sugiere rechazar $H_0$, en contraste, si la probabilidad es grande, es muy posible que el valor observado se derive de la distribución originada bajo $H_0$ y por ende no la rechazamos.
 
-Dado que tomamos decisiones con múltiple $p-value$ estadísticamente es posible que tomemos falsos positivos, por lo que es necesario tener una medición que nos permita decidir, que proporción de esos falsos positivos estamos dispuesto a aceptar para sacar conclusiones confiables de nuestros resultados. Eso ha dado origen a distintas pruebas de corrección que permiten medir este fenómeno, un método muy común para hacer esto es utilizando Tasas de Falsos Positivos o False Discovery Rate (FDR) por sus siglas en ingles.
+Dado que tomamos decisiones con múltiple $p-value$ estadísticamente es posible que tomemos falsos positivos, por lo que es necesario tener una medición que nos permita decidir, qué proporción de esos falsos positivos estamos dispuesto a aceptar para sacar conclusiones confiables de nuestros resultados. Eso ha dado origen a distintas pruebas de corrección que permiten medir este fenómeno, un método muy común para hacer esto es utilizando Tasas de Falsos Positivos o False Discovery Rate (FDR) por sus siglas en inglés.
 
 La siguiente definición se basa en [@benjamini1995controlling]. Considere el problema de probar de manera simultánea $m$ hipótesis nulas, de las cuales $m_0$ son verdad. Sea $R$ el número de hipótesis rechazadas. La tabla 1 resume de manera tradicional esta situación.
 
 
 |                  | No significativas| Significativas| Total|
 |:-----------------|:----:|:---:|:----:|
-|$H_0$ verdaderas     | $U$|   $V$|  m_0|
+|$H_0$ verdaderas     | $U$|   $V$|  $m_0$|
 |$H_0$ no verdaderas  | $T$|   $S$|  $m-m_0$|
 |Total        | $m-R$|   $R$|  $m$|
 
@@ -106,7 +105,7 @@ Se asume que las $m$ hipótesis son conocidas. Note que $R$ es una variable alea
 $$(6)Q = \frac{V}{V+S}$$
 Es decir, dado que $V$ representa los casos que declaramos significativos dado que $H_0$ es verdadera, entonces $Q$ representa la proporción de hipótesis nulas rechazadas las cuales son erróneamente rechazadas. Naturalmente, definimos $Q = 0$ cuando $V+S = 0$ y por otro lado $Q$ es una variable aleatoria no observada. Definimos entonces FDR como:
 
-$$(7)FDR = Q_e = E(Q) = E(\frac{V}{V+S}) = E(\frac{V}{R})$$
+$$(7)FDR = Q_e = E(Q) = E\left(\frac{V}{V+S}\right) = E\left(\frac{V}{R}\right)$$
 
 Es decir, la proporción esperada de rechazadas de manera errónea. Dado que la variable $R$ puede variar en función de $\alpha$ es necesario tener un control sobre la tasa FDR, por ejemplo, supongamos que estamos comprando dos tratamientos en múltiples subgrupos y se tienen que hacer recomendaciones separadas sobre el tratamiento preferido para cada subgrupo. Lo que buscamos entonces es descubrir tantas diferencias significativas como sea posible, alcanzando así decisiones operativas, pero estaríamos dispuestos a admitir una proporción preespecificada de errores (falsos positivos), es decir estaríamos dispuestos a trabajar bajo un umbral de proporción de errores considerando controlar la tasa FDR.
 
@@ -129,7 +128,7 @@ y la tasa FDR es controlada.
 
 \section{Análisis Exploratorio}
 
-Se analizaron un total de 106 personas distribuidos en varios municipios dentro del país. Se tienen un total de 64 hombres con edad promedio de 25 años y un total de 42 mujeres con una edad promedio de 31 años. Dentro de nuestro grupo de estudio se cuenta con un grupo control de 50 individuos, mientras que el resto son pacientes. 
+Se analizaron un total de 106 personas distribuidas en varios municipios dentro del país. Se tienen un total de 64 hombres con edad promedio de 25 años y un total de 42 mujeres con una edad promedio de 31 años. Dentro de nuestro grupo de estudio se cuenta con un grupo control de 50 individuos, mientras que el resto son pacientes. 
 
 Los individuos de estudio se encuentran distribuidos en 47 municipios, la mayoría de ellos se concentra en el centro del país, algunos de ellos en el norte y otros tantos en el sur. De estos municipios y de acuerdo con cifras del Índice de Marginación (IMN) publicadas por la CONAPO tenemos un total de 41 municipios con índice de marginación muy bajo, 3 con IM bajo, 2 con IM medio y sólo 1 con IM muy alto. El siguiente mapa muestra la distribución de los pacientes dentro de los municipios.
 
@@ -192,7 +191,7 @@ idg_municipios %>% ggplot(aes(x = IDG)) + geom_histogram(fill = "lightblue") +
 
 
 Cada una de las variables anteriores (IDG, IM, Edad, Grupo y Genero) son parte de las variables explicativas dentro del modelo propuesto.
-Por otro lado, en el caso de las variables dependientes, como ya se mencionó a cada uno de los pacientes se le ha practicado una resonancia magnética o MRI. Las imágenes del cerebro se han obtenido con dos tipos de scanner GE y Siemens y han sido sujetas a controles de calidad para garantizar la veracidad de los datos. Dichas imágenes se han creado en formato _mnc_ uno de los más usados en medicina de acuerdo con [@larobina_medical_2014]. 
+Por otro lado, en el caso de las variables dependientes, como ya se mencionó a cada uno de los individuos dentro del estudio se le ha practicado una resonancia magnética o MRI. Las imágenes del cerebro se han obtenido con dos tipos de scanner GE y Siemens y han sido sujetas a controles de calidad para garantizar la calidad de los datos. Dichas imágenes se han creado en formato _mnc_, uno de los más usados en medicina de acuerdo con [@larobina_medical_2014]. 
 
 De acuerdo con [@fninf] surgiendo en 1995 como una disciplina formal, la cartografía cerebral humana se ha convertido en una metodología de investigación indispensable en numerosos proyectos de investigación clínica básica que estudian diversas poblaciones utilizando neuroimagen. Los datos de neuroimagen recopilados en un estudio de cohorte típico son multi-espectrales y de multi-resolución, por lo que contienen un conjunto rico de metadatos relacionados con los parámetros de exploración o el diseño del estudio. Estos datos se integrarán en última instancia con una miríada de variables específicas del sujeto, como el comportamiento, biométricas y genéticas. Debido a que muchos de estos estudios son longitudinales y los datos se proporcionan a través de canales de múltiples fuentes, tanto el análisis en línea como el seguimiento de la procedencia son esenciales.
 
@@ -201,8 +200,6 @@ El formato MINC para datos de neuro informática fue diseñado e implementado pa
 * Un formato de encabezado extensible que incluye tanto la adquisición de datos como el historial de análisis.
 * Metadatos auto-documentados utilizando nombres de variables y atributos descriptivos legibles por humanos.
 * Soporte para alta dimensionalidad y sistemas de coordenadas arbitrarias, incluidas dimensiones muestreadas de forma irregular.
-
-Particularmente, las imágenes se obtuvieron con ayuda del CIVET el cual es un pipeline de procesamiento de imágenes cerebrales humanas para análisis corticométricos, morfométricos y volumétricos totalmente automatizados de imágenes de resonancia magnética (RM). El pipeline está compuesto por un conjunto de scripts Perl y programas de alto nivel en C/C++ [@noauthor_bic_nodate].
 
 El grosor cortical es uno de los outputs que se obtiene; para cada individuo se genera de forma ordenada un mapeo de los distintos vértices que conforman en cerebro en un archivo plano, en donde cada valor representa la medida en milímetros del grosor cortical. Para tener una idea a qué hace referencia esta medida la siguiente imagen ejemplifica lo que un vértice representa.  
 
@@ -216,7 +213,7 @@ grid.arrange(subcortical_region, ncol=1, nrow = 1)
 
 ```
 
-Cada salida que hacer referencia al grosor cortical tiene un total de 40,962 vértices, cada uno de estos formará una regresión lineal en conjunto con el resto de los pacientes, es decir el primer vértice de cada paciente es procesado y se forma un primer modelo y así de manera sucesiva. En total se tendrían que realizar 40,962 regresiones con múltiples pruebas de hipótesis, este escenario es ideal para el modelo propuesto en la sección anterior y que será aplicado. 
+Cada salida que hace referencia al grosor cortical tiene un total de 40,962 vértices, cada uno de estos formará una regresión lineal en conjunto con el resto de los pacientes, es decir el primer vértice de cada paciente es procesado y se forma un primer modelo y así de manera sucesiva. En total se tendrían que realizar 40,962 regresiones con múltiples pruebas de hipótesis, este escenario es ideal para el modelo propuesto en la sección anterior y que será aplicado. 
 
 Es comúnmente sabido que el cerebro se compone de dos hemisferios, pero además de eso, existen zonas "estándar" en las que se divide para su estudio, dichas zonas son:
 
@@ -228,7 +225,7 @@ Es comúnmente sabido que el cerebro se compone de dos hemisferios, pero además
 * Lóbulo Occipital
 * Zona Subcortical
 
-En esta última zona del cerebro, entre otras cosas podemos encontrar el cerebelo que está asociado con funcionas motoras, por lo que para refinar el modelo esta parte será descartada del análisis pues no estamos relacionando nuestro estudio con este tipo de funcionalidades, es por ello que es necesario _enmascarar_ el cerebro, lo cual implica descartar los vértices adecuados. En el anexo de este documento se puede observar el procedimiento y el código utilizado para ello. La siguiente imagen muestra la región subcortical del cerebro de uno de los individuos de estudio.
+En esta última zona del cerebro, entre otras cosas podemos encontrar el cerebelo que está asociado con funciones motoras, por lo que para refinar el modelo esta parte será descartada del análisis pues no estamos relacionando nuestro estudio con este tipo de funcionalidades, es por ello que es necesario _enmascarar_ el cerebro, lo cual implica descartar los vértices adecuados que no son de interés. En el anexo de este documento se puede observar el procedimiento y el código utilizado para ello. La siguiente imagen muestra la región subcortical del cerebro de uno de los individuos de estudio.
 
 
 ```{r, fig.show='hold', out.width = "50%", fig.align = "center", fig.cap="Región Subcortical del Cerebo. La escala muestra la intensidad en mm de los vértices", echo=FALSE}
@@ -271,7 +268,7 @@ Hemisferio derecho
 
 La prueba nos indica que en el caso del hemisferio izquierdo los valores $T$ de la prueba deben superar el umbral de 2.15 mientras que en el caso del hemisferio derecho es de 1.98. El segundo modelo analizado contempla la relación dentro el grosor cortical, el IDG y el IM. El modelo planteado es como sigue:
 
-$CorticalTickness = IDG + IM$
+$$CorticalTickness = IDG + IM$$
 
 En este caso los resultado de la prueba FDR muestran una mayor confiabilidad del modelo pues muestra que en el caso del IDG la relación deja de ser despreciable a partir de un treshold de 10% y en el caso del IM desde el 1% ya existen valores estadísticamente significativos. Las siguientes tablas muestran los resultados de las pruebas FDR para ambos hemisferios:
 
@@ -482,9 +479,9 @@ grid.arrange(g1,g2, nrow = 2, ncol = 1, left = "Grosor Cortical", bottom = 'IM')
 ```
 
 
-Note que el caso del hemisferio derecho ambas variables muestran un efecto en el cambio estructural del grosor cortical. En el caso del IDG, los niveles se ven más afectados en el caso de los hombres, mientras que en el caso del índice de marginación las repercusiones son prácticamente iguales. El hemisferio menos afectado es el izquierdo, en donde para el caso del IDG estadísticamente no existe un cambio en el caso de las mujeres y muy ligeramente en el caso de lo hombre, mientras que en el índice de marginación la pendiente es muy similar en ambos sexos si se compara con el del hemisferio derecho. 
+Note que en el caso del hemisferio derecho ambas variables muestran un efecto en el cambio estructural del grosor cortical. En el caso del IDG, los niveles se ven más afectados en el caso de los hombres, mientras que en el caso del índice de marginación las repercusiones son prácticamente iguales. El hemisferio menos afectado es el izquierdo, en donde para el caso del IDG estadísticamente no existe un cambio en el caso de las mujeres y muy ligeramente en el caso de los hombres, mientras que en el índice de marginación la pendiente es muy similar en ambos sexos si se compara con el del hemisferio derecho. 
 
-Lo observado hasta ahora permite concluir un par de cosas, en primer lugar, que existe evidencia significativa que muestra que claramente el valor del IDG y el IM afecta la estructura del cerebro, pero a su vez no prueba de manera contundente si afecta más a hombre o a mujeres. Esto último podría ser más concluyente si consideramos un aumento en la muestra de hombres y mujeres. Finalmente, nuestra investigación permite de alguna manera crear un antecedente considerando el entorno social de una persona en donde basado en eso, se pueda dar pie a posibles causas de anomalías que tengan que ver con la estructura cerebral.
+Lo observado hasta ahora permite concluir un par de cosas, en primer lugar, que existe evidencia significativa que muestra que claramente el valor del IDG y el IM afecta la estructura del cerebro, pero a su vez no prueba de manera contundente si afecta más a hombres o a mujeres. Esto último podría ser más concluyente si consideramos un aumento en la muestra de hombres y mujeres. Finalmente, nuestra investigación permite de alguna manera crear un antecedente considerando el entorno social de una persona en donde basado en eso, se pueda dar pie a posibles causas de anomalías que tengan que ver con la estructura cerebral.
 
 
 
