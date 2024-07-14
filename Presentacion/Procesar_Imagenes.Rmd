@@ -1,0 +1,38 @@
+---
+title: "Imagenes"
+author: "Jorge Garcia"
+date: "2024-07-14"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(sf)
+library(leaflet)
+library(cowplot)
+library(ggplot2)
+library(magick)
+library(grid)
+library(png)
+require(gridExtra)
+library(patchwork)
+```
+
+
+```{r, echo=FALSE,fig.show='hold', out.width = "70%", fig.align = "center", fig.cap="Proyección IM sobre zonas del cerebro afectadas. Del lado izquierdo vista interna y externa hemiserio izauierdo. De lado derecho, vistas del hemisferio derecho"}
+
+left_fig <- rasterGrob(readPNG("Imagenes/TestFinales/idg10_left_internal.png"), interpolate=TRUE)
+leftext_fig <- rasterGrob(readPNG("Imagenes/TestFinales/idg10_left_internal.png"), interpolate=TRUE) 
+right_fig <- rasterGrob(readPNG("Imagenes/TestFinales/idg10_right_internal.png"), interpolate=TRUE)
+rightext_fig1 <- rasterGrob(readPNG("Imagenes/TestFinales/idg10_right_external.png"), interpolate=TRUE) 
+
+
+# grid.arrange(pre_fig, post_fig, ncol=2)
+grid.arrange(left_fig, right_fig, leftext_fig, rightext_fig1, ncol=2, nrow = 2)
+
+
+```
