@@ -11,6 +11,7 @@
 \usetheme{CambridgeUS}
 \usecolortheme{dolphin}
 
+
 % set colors
 \definecolor{myNewColorA}{RGB}{0,102,51}
 \definecolor{myNewColorB}{RGB}{46,139,87}
@@ -79,7 +80,7 @@
     \begin{itemize}
     \item Definir la región de interés (ROI)
     \item Correr el modelo de regresión sobre la región de interés  
-    \item Determinar la tasa FDS del nivel de significancia de nuestras variables explicativas 
+    \item Determinar la tasa de descubrimiento falso FDR para distintos niveles de significancia de nuestras variables explicativas 
     \item En caso de que la variable sea significativa, mapear las zonas del cerebro afectadas 
     \item Determinar el efecto de cada variable y encontrar si existe diferencia entre hombres y mujeres 
     \end{itemize}
@@ -114,7 +115,57 @@
     \end{itemize}\newline
     \end{frame}
 
+\section{Variables}
+    \begin{frame}{Variables}
+    El Índice de Desigualdad de Género (IDG) refleja las desigualdades que experimentan las mujeres respecto a los hombres en tres dimensiones o subíndices: empoderamiento, participación en el mercado laboral y salud reproductiva. 
 
+    El cáluclo del IDG, según la metodología global se determina de la siguiente manera:\newline
+
+    $$IDG = 1-\frac{ARMO(G_M , G_H)}{G_{\bar{M},\bar{H}}}$$
+
+    Donde $G_M$ y $G_H$ son las formúlas de agregación para las mujeres y hombres respectivamente. Dichas formulas de agregación contemplan tasas de moratlidad, fecundidad, representación en cabildos entre otras. Mientras mayor es el IDG mayor será el grado de desigualdad de un municipio. 
+    
+    \end{frame}
+
+    \begin{frame}{Variables}
+    Mapa de calor del IDG
+
+    \begin{figure}[h]
+        \begin{minipage}[c]{0.9\linewidth}
+        \centering
+        \includegraphics[height=6cm]{figures/MapacalorIDG.png}
+        %\caption{Proyección IDG}
+        \end{minipage}\hfill
+        %\caption{Resultados tomando un treshold del 20\% en la prueba FDR}
+    \end{figure}
+    
+    \end{frame}
+
+    \begin{frame}{Variables}
+    El índice de marginación es una medida-resumen que permite diferenciar las localidades del país según el impacto global de las carencias que padece la población como resultado de la falta de acceso a la educación, la residencia en viviendas inadecuadas y la carencia de bienes.
+
+    Mediante el uso de Componentes Principales (CP) el IM se expresa como: 
+
+    $$ IM_i^{CP} = \sum_{j=1}^9 \omega_j \frac{x_{ij}-\bar{x_j}}{S_j}$$
+
+    donde $\omega_j$ representa las ponderaciones de la primera CP, $x_{ij}$ es el valor de la variable j-ésima en el territorio i-ésimo, $\bar{x_j}$ es el valor medio de la variable j-ésima, y $S_j$ es “la desviación estándar insesgada del indicador socioeconómico $j$”. Mientras menor sea el valor que toma el IM mayor será el nivel de marginación. 
+
+
+    \end{frame}
+
+    \begin{frame}{Variables}
+    Mapa de calor del IM
+
+    \begin{figure}[h]
+        \begin{minipage}[c]{0.9\linewidth}
+        \centering
+        \includegraphics[height=6cm]{figures/MapacalorIM.png}
+        %\caption{Proyección IDG}
+        \end{minipage}\hfill
+        %\caption{Resultados tomando un treshold del 20\% en la prueba FDR}
+    \end{figure}
+    
+    \end{frame}
     
 \section{Resultados}
     \begin{frame}{Resultados}
@@ -164,11 +215,13 @@
         \begin{minipage}[c]{0.5\linewidth}
         \centering
         \includegraphics[height=4cm]{figures/10idg.png}
+        \renewcommand{\figurename}{}
         \caption{Proyección IDG}
         \end{minipage}\hfill
         \begin{minipage}[c]{0.5\linewidth}
         \centering
         \includegraphics[height=4cm]{figures/10im.png}
+        \renewcommand{\figurename}{}
         \caption{Proyección IM}
         \end{minipage}
         %\caption{}
@@ -181,11 +234,13 @@
         \begin{minipage}[c]{0.5\linewidth}
         \centering
         \includegraphics[height=4cm]{figures/15idg.png}
+        \renewcommand{\figurename}{}
         \caption{Proyección IDG}
         \end{minipage}\hfill
         \begin{minipage}[c]{0.5\linewidth}
         \centering
         \includegraphics[height=4cm]{figures/15im.png}
+        \renewcommand{\figurename}{}
         \caption{Proyección IM}
         \end{minipage}
         %\caption{}
@@ -199,11 +254,13 @@
         \begin{minipage}[c]{0.5\linewidth}
         \centering
         \includegraphics[height=4cm]{figures/20idg.png}
+        \renewcommand{\figurename}{}
         \caption{Proyección IDG}
         \end{minipage}\hfill
         \begin{minipage}[c]{0.5\linewidth}
         \centering
         \includegraphics[height=4cm]{figures/20im.png}
+        \renewcommand{\figurename}{}
         \caption{Proyección IM}
         \end{minipage}
         %\caption{}
