@@ -10,7 +10,7 @@ En términos generales, para poder correr el modelo debemos seguir los siguiente
 * Determinar la tasa FDS del nivel de significacia de nuestras variables explicativas
 * En caso de que la variable sea significativa, mapear las zonas del cerebro afectadas
 
-**NOTA**: para mayor detalle sobre el uso de la VM y el procedimiento aquí explicado ver la carpeta "Scripbash"
+**NOTA**: para mayor detalle sobre el uso de la VM y el procedimiento aquí explicado ver la carpeta "ScriptBash"
 
 El primer paso para obtener la región de interés será definir la estructura promedio del cerebro de nuestros pacientes para utilizarla como base para mostrar los resultados que se obtengan y para que a tevés de ella podamos definir la ROI. Para ello, desde la terminal de la VM escribiremos el siguiente código:
 
