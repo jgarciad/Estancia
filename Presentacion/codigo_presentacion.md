@@ -311,6 +311,135 @@
     
 \end{frame}
 
+\section{Conclusiones}
+    \begin{frame}{Conclusiones}
+    Los resultados del modelo muestran que mientras mayores niveles de IDG estadísticamente se tiende a tener menores niveles de grosor cortical. De la misma forma, mientras menor es el valor del IM se observa un menor grosor cortical.
+
+    \begin{figure}[!h]
+        \begin{minipage}[c]{0.4\linewidth}
+        \centering
+        \includegraphics[height=4cm]{figures/ResultadosIDG_grafica.png}
+        %\caption{Proyección IDG}
+        \end{minipage}\hfill
+        \begin{minipage}[c]{0.49\linewidth}
+        \centering
+        \includegraphics[height=4cm]{figures/ResultadosIM_grafica.png}
+        %\caption{Proyección IM}
+        \end{minipage}
+        %\caption{Resultados tomando un treshold del 20\% en la prueba FDR}
+    \end{figure}
+    En conclusión, mientras peor es la condición social ya sea por marginación o desigualdad de género, se observa un menor grosor cortical. 
+
+\end{frame}
+
+\section{Anexos}
+    \begin{frame}{Anexos}
+IDG Total (hombres y mujeres)
+
+    \begin{figure}[!h]
+        \begin{minipage}[c]{0.4\linewidth}
+        \centering
+        \includegraphics[height=4cm]{figures/IDG_Total.png}
+        %\caption{Proyección IDG}
+        \end{minipage}\hfill
+        \begin{minipage}[c]{0.49\linewidth}
+        \centering
+        \includegraphics[height=4cm]{figures/IDG_Total_R.png}
+        %\caption{Proyección IM}
+        \end{minipage}
+        %\caption{Resultados tomando un treshold del 20\% en la prueba FDR}
+    \end{figure}   
+    \end{frame}
+
+    \begin{frame}{Anexos}
+IDG Hombres
+
+    \begin{figure}[!h]
+        \begin{minipage}[c]{0.4\linewidth}
+        \centering
+        \includegraphics[height=4cm]{figures/IDG_Hombres.png}
+        %\caption{Proyección IDG}
+        \end{minipage}\hfill
+        \begin{minipage}[c]{0.49\linewidth}
+        \centering
+        \includegraphics[height=4cm]{figures/IDG_Hombres_R.png}
+        %\caption{Proyección IM}
+        \end{minipage}
+        %\caption{Resultados tomando un treshold del 20\% en la prueba FDR}
+    \end{figure}
+    \end{frame}
+
+    \begin{frame}{Anexos}
+IDG Mujeres
+
+    \begin{figure}[!h]
+        \begin{minipage}[c]{0.4\linewidth}
+        \centering
+        \includegraphics[height=4cm]{figures/IDG_Mujeres.png}
+        %\caption{Proyección IDG}
+        \end{minipage}\hfill
+        \begin{minipage}[c]{0.49\linewidth}
+        \centering
+        \includegraphics[height=4cm]{figures/IDG_Mujeres_R.png}
+        %\caption{Proyección IM}
+        \end{minipage}
+        %\caption{Resultados tomando un treshold del 20\% en la prueba FDR}
+    \end{figure}
+    \end{frame}
+
+    \begin{frame}{Anexos}
+IM Total (hombres y mujeres)
+
+    \begin{figure}[!h]
+        \begin{minipage}[c]{0.4\linewidth}
+        \centering
+        \includegraphics[height=4cm]{figures/IM_Total.png}
+        %\caption{Proyección IDG}
+        \end{minipage}\hfill
+        \begin{minipage}[c]{0.49\linewidth}
+        \centering
+        \includegraphics[height=4cm]{figures/IM_Total_R.png}
+        %\caption{Proyección IM}
+        \end{minipage}
+        %\caption{Resultados tomando un treshold del 20\% en la prueba FDR}
+    \end{figure}
+    \end{frame}
+
+    \begin{frame}{Anexos}
+IM Hombres
+
+    \begin{figure}[!h]
+        \begin{minipage}[c]{0.4\linewidth}
+        \centering
+        \includegraphics[height=4cm]{figures/IM_Hombres.png}
+        %\caption{Proyección IDG}
+        \end{minipage}\hfill
+        \begin{minipage}[c]{0.49\linewidth}
+        \centering
+        \includegraphics[height=4cm]{figures/IM_Hombre_R.png}
+        %\caption{Proyección IM}
+        \end{minipage}
+        %\caption{Resultados tomando un treshold del 20\% en la prueba FDR}
+    \end{figure}
+    \end{frame}
+
+   \begin{frame}{Anexos}
+IM Mujeres
+
+    \begin{figure}[!h]
+        \begin{minipage}[c]{0.4\linewidth}
+        \centering
+        \includegraphics[height=4cm]{figures/IM_Mujeres.png}
+        %\caption{Proyección IDG}
+        \end{minipage}\hfill
+        \begin{minipage}[c]{0.49\linewidth}
+        \centering
+        \includegraphics[height=4cm]{figures/IM_Mujeres_R.png}
+        %\caption{Proyección IM}
+        \end{minipage}
+        %\caption{Resultados tomando un treshold del 20\% en la prueba FDR}
+    \end{figure}
+    \end{frame}
 
 \section*{Agradecimientos}  
     \begin{frame}

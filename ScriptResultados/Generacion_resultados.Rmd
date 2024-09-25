@@ -21,12 +21,23 @@ Display lh_average.obj
 Lo anterior nos lleva a la ruta donde esta nuestra carpeta principal, prosteriormente el comando _Display_ genera una vista 3D el cual se ve de la siguiente manera. 
 
 <center>
-![](Imagenes/Subortical_left_example.png){height="300" width=40% }
+![](Imagenes/cerebro_promedio_vf.png){height="300" width=40% }
+
 </center>
 
 
+Sobre dicha imagen vamos a proyectar los resultados. Cuando usamos el comando _Display_ no sólo se genera una imagen, sino también un menú a partir del cual cargaremos los archivos con los valores a proyectar, para hacer eso seguimos los siguientes pasos:
+
+1. En _Pop Menu_ buscamos _File_
+2. Dentro de _File_ seleccionamos _Load Vertex Data_
+3. Seleccionamos el archivo que queramos cargar
+4. Presionamos cargar y se podrán observar los valores proyectados
+
+A partir de ahí, lo siguiente será exportar las imagenes. 
 
 
-Sobre dicha imagen vamos a proyectar los resultados. Lo siguiente.....
+
+
+
 
 
