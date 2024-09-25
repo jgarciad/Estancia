@@ -2,6 +2,19 @@
 ## Objetivo
 El objetivo de este proyecto consiste en determinar si los niveles de desigualdad de género y el índice de marginación por municipio en México, son reelevantes para la estructura cerebral dentro de un grupo de individuos de estuido. 
 
+## Sobre este repo
+Se describe el contenido de este repositorio:
+
+* **Imagenes:** contiene las imagenes generadas que muestran los resultados obtenidos
+* **Inputs:** contiene la base de individuos que participan dentro del estudio y sus características
+* **Presentación:** contiene la presentación de los resultados y el código que se utilizó para generarla
+* **Resporte:** contiene el reporte de resultados y el código utilizado para su generación
+* **ScriptBash:** contiene las instrucciones de cómo instalar y configurar la VM así como los códigos para el procesamiento de archivos generados por el CIVET
+* **ScriptR:** contiene la explicación de cómo se generan los resultados del modelo usando R y
+* **ScriptResultados:** contiene la explicación de cómo se proyectan los resultados para obetner las zonas del cerebro afectadas a partir de los resultados obtenidos con el modelo aplicado en R
+
+# Resumen General
+
 ## Procedimiento
 En términos generales, para poder correr el modelo debemos seguir los siguientes pasos:
 
